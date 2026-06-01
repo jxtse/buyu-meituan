@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>小团 · 周末闲时活动规划 Agent</title>
+<link rel="stylesheet" href="/static/app.css?v=20260601-ui26">
+</head>
+<body>
+<div class="stage">
+  <!-- ===== 左：产品手机 ===== -->
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="app">
+      <!-- 顶栏 -->
+      <header class="topbar">
+        <div class="brand">
+          <span class="logo">小团</span>
+        </div>
+        <div class="loc" id="loc">📍 定位中…</div>
+      </header>
+
+      <!-- 主滚动区 -->
+      <main class="feed" id="feed">
+        <!-- 欢迎/输入态 -->
+        <section class="welcome" id="welcome">
+          <div class="hero">
+            <div class="hero-emoji">🗺️</div>
+            <h1>这个下午，<br>交给小团来安排</h1>
+            <p>一句话告诉我你想怎么过，<br>我帮你把吃喝玩乐排好、一键下单。</p>
+          </div>
+          <div class="chips" id="chips">
+            <button class="chip" data-preset-id="family" data-q="周末下午带老婆孩子出来玩，孩子5岁，想找个能遛娃的地方，再吃顿好的，别离家太远">👨‍👩‍👧 带5岁娃遛弯+吃饭</button>
+            <button class="chip" data-preset-id="couple" data-q="今天和对象约会，想找个文艺点的地方逛逛，再吃个有氛围的晚饭，最好有惊喜">💕 情侣约会+惊喜</button>
+            <button class="chip" data-preset-id="friends" data-q="周末和三四个朋友聚一下，想玩点带劲的再撸个串，预算别太高">🎉 朋友聚会撸串</button>
+            <button class="chip" data-preset-id="solo" data-q="一个人想出去走走放松下，下午有空，随便逛逛吃点好的">🚶 一个人放空</button>
+          </div>
+        </section>
+
+        <!-- 行程流（卡片动态插入） -->
+        <section class="timeline" id="timeline"></section>
+      </main>
+
+      <!-- 底部输入 -->
+      <footer class="composer" id="composer">
+        <input id="input" type="text" placeholder="说说你想怎么过这个下午…" autocomplete="off">
+        <button id="voice" class="voice" type="button" aria-label="语音输入" aria-pressed="false" title="短按开始/停止，长按按住说话">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3Z"></path>
+            <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+            <path d="M12 19v3"></path>
+          </svg>
+        </button>
+        <button id="send" class="send">↑</button>
+      </footer>
+
+      <!-- ===== 详情抽屉：限定在手机界面内 ===== -->
+      <div class="drawer-mask" id="drawer-mask"></div>
+      <div class="drawer" id="drawer"></div>
+    </div>
+  </div>
+
+  <!-- ===== 右：技术面板 ===== -->
+  <aside class="tech">
+    <div class="tech-head">
+      <span class="dot"></span>
+      <h2>Agent 思考链路</h2>
+      <span class="tech-tag" id="tech-stage">待命</span>
+    </div>
+    <div class="tech-sub">模型工作独白、工具输入输出、实时调整会按时间线展开</div>
+    <div class="tech-log" id="tech-log"></div>
+    <div class="tech-foot">
+      <div class="legend"><span class="lg lg-think"></span>LLM 推理</div>
+      <div class="legend"><span class="lg lg-tool"></span>工具调用</div>
+      <div class="legend"><span class="lg lg-heal"></span>自动调整</div>
+    </div>
+  </aside>
+</div>
+
+<script src="/static/app.js?v=20260601-ui26"></script>
+</body>
+</html>

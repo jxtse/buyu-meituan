@@ -1,0 +1,578 @@
+[
+  {
+    "id": "kiddo_lab",
+    "name": "河西 Kiddo Lab 亲子科学实验场",
+    "segment": "play",
+    "category": "亲子乐园",
+    "scenes": ["family"],
+    "location": [118.7372, 32.0148],
+    "address": "建邺区江东中路金陵天地 3F",
+    "distance_km": 0.4,
+    "rating": 4.7,
+    "review_count": 2381,
+    "price_per_person": 128,
+    "tags": ["室内", "科学互动", "雨天友好", "3-8岁"],
+    "open_hours": "10:00-20:30",
+    "suit_for": ["亲子", "有娃", "周末", "低龄"],
+    "ai_pitch": "离你 400 米，室内场雨天也不怕。5 岁孩子能自己动手做小实验，家长不用全程抱着跑，正好歇口气。",
+    "image": "place_photos/gen_kiddo_lab.png",
+    "gallery": ["place_photos/gen_kiddo_lab.png"],
+    "groupon": [
+      {"id": "grp_kiddo_family", "title": "周末亲子探索 2大1小套票", "price": 268, "original": 384, "sold": 1820, "for_scene": "family", "includes": ["3人入场", "1次科学实验课", "儿童餐1份"]},
+      {"id": "grp_kiddo_single", "title": "单人畅玩 90 分钟", "price": 99, "original": 128, "sold": 940}
+    ],
+    "booking": {"type": "ticket", "label": "预约 14:00 场亲子套票", "party_default": 3},
+    "queue": {"need_queue": true, "wait_min": 25, "has_table": true},
+    "tickets_left": 18,
+    "dianping_notes": [
+      {"author": "团子妈Vivian", "avatar_color": "#FF7A45", "likes": 312, "title": "南京遛娃天花板！5岁娃玩了俩小时不肯走", "body": "周末带娃来的，室内环境很干净，空调很足。最惊喜的是科学实验区，娃自己穿上小白褂做泡泡实验，工作人员很有耐心。家长有休息区可以喝咖啡，强烈推荐2大1小套票，比单买划算一半。", "images": ["place_photos/gen_kiddo_lab.png"]},
+      {"author": "奶爸阿强", "avatar_color": "#36CFC9", "likes": 156, "title": "雨天救星，遛娃不淋雨", "body": "南京下雨天没地方去，搜到这家。停车在金陵天地很方便，3楼直达。娃玩疯了，建议提前订票，现场排队要等25分钟。", "images": ["place_photos/note_kiddo_rain.png"]}
+    ],
+    "reviews": [
+      {"text": "孩子能自己做小实验，家长不用一直抱着跑。", "useful": 31, "author": "团子妈Vivian"},
+      {"text": "周末下午人多，最好提前买票，现场要等。", "useful": 19, "author": "奶爸阿强"},
+      {"text": "空调很足，洗手间有母婴台，细节到位。", "useful": 12, "author": "momo"}
+    ]
+  },
+  {
+    "id": "xuanwu_bounce",
+    "name": "玄武湖 Bounce 蹦床公园",
+    "segment": "play",
+    "category": "亲子乐园",
+    "scenes": ["family"],
+    "location": [118.7911, 32.0756],
+    "address": "玄武区玄武湖景区翠洲入口旁",
+    "distance_km": 5.2,
+    "rating": 4.5,
+    "review_count": 1644,
+    "price_per_person": 96,
+    "tags": ["蹦床", "湖边", "放电神器"],
+    "open_hours": "09:30-19:00",
+    "suit_for": ["亲子", "有娃", "运动"],
+    "ai_pitch": "湖边蹦床场，孩子放电一流，玩完还能顺着玄武湖散步。不过离你 5 公里，比河西那家远一些。",
+    "image": "place_photos/gen_xuanwu_bounce.png",
+    "gallery": ["place_photos/gen_xuanwu_bounce.png"],
+    "groupon": [
+      {"id": "grp_bounce_family", "title": "亲子双人畅跳 90 分钟", "price": 158, "original": 192, "sold": 670, "for_scene": "family"},
+      {"id": "grp_bounce_90", "title": "90 分钟儿童畅玩票", "price": 89, "original": 96, "sold": 1200}
+    ],
+    "booking": {"type": "ticket", "label": "预约亲子畅跳票", "party_default": 2},
+    "queue": {"need_queue": true, "wait_min": 15, "has_table": true},
+    "tickets_left": 12,
+    "dianping_notes": [
+      {"author": "跳跳虎妈妈", "avatar_color": "#9254DE", "likes": 88, "title": "玄武湖边遛娃，蹦完散步一条龙", "body": "场地不算特别大但工作人员看护认真，娃跳得满头大汗。玩完直接去翠洲走一圈，傍晚湖景很美。", "images": ["place_photos/gen_xuanwu_bounce.png"]}
+    ],
+    "reviews": [
+      {"text": "离玄武湖很近，玩完还能散步。", "useful": 22, "author": "跳跳虎妈妈"},
+      {"text": "空间不算大，但工作人员看护比较认真。", "useful": 15, "author": "路人甲"}
+    ]
+  },
+  {
+    "id": "aqua_kids_zero",
+    "name": "新街口 Aqua Kids 水育中心",
+    "segment": "play",
+    "category": "亲子乐园",
+    "scenes": ["family"],
+    "location": [118.7808, 32.0432],
+    "address": "秦淮区中山南路亲子广场 B1",
+    "distance_km": 4.6,
+    "rating": 4.4,
+    "review_count": 902,
+    "price_per_person": 158,
+    "tags": ["水育", "低龄", "预约制"],
+    "open_hours": "10:00-18:00",
+    "suit_for": ["亲子", "低龄", "有娃"],
+    "ai_pitch": "适合更低龄的宝宝，水温恒定。但今天热门时段已约满，作为备选放着。",
+    "image": "place_photos/gen_aqua_kids.png",
+    "gallery": ["place_photos/gen_aqua_kids.png"],
+    "groupon": [
+      {"id": "grp_aqua_trial", "title": "低龄水育体验课", "price": 99, "original": 158, "sold": 430}
+    ],
+    "booking": {"type": "ticket", "label": "预约水育体验课", "party_default": 1},
+    "queue": {"need_queue": false, "wait_min": 0, "has_table": true},
+    "tickets_left": 0,
+    "dianping_notes": [
+      {"author": "小鱼儿麻麻", "avatar_color": "#40A9FF", "likes": 64, "title": "适合小月龄宝宝的水育", "body": "水温稳定，教练专业。热门时段很快约满，建议提前一天约。", "images": ["place_photos/gen_aqua_kids.png"]}
+    ],
+    "reviews": [
+      {"text": "适合小龄宝宝，水温稳定。", "useful": 18, "author": "小鱼儿麻麻"},
+      {"text": "热门时段很快约满。", "useful": 27, "author": "豆豆爸"}
+    ]
+  },
+  {
+    "id": "deji_light_show",
+    "name": "德基美术馆 · 沉浸光影展",
+    "segment": "play",
+    "category": "展览/艺术",
+    "scenes": ["friends", "couple", "solo"],
+    "location": [118.7825, 32.0440],
+    "address": "秦淮区中山路 18 号德基广场二期 8F",
+    "distance_km": 4.5,
+    "rating": 4.8,
+    "review_count": 5120,
+    "price_per_person": 88,
+    "tags": ["网红打卡", "沉浸式", "出片"],
+    "open_hours": "10:00-22:00",
+    "suit_for": ["朋友", "情侣", "展览", "拍照", "一个人"],
+    "ai_pitch": "南京最出片的沉浸光影展，一个人也能慢慢逛、随手拍。逛完楼下就是吃饭和咖啡，动线顺。",
+    "image": "place_photos/gen_deji_light_show.png",
+    "gallery": ["place_photos/gen_deji_light_show.png"],
+    "groupon": [
+      {"id": "grp_deji_4", "title": "4人同行展览套票", "price": 299, "original": 352, "sold": 880, "for_scene": "friends"},
+      {"id": "grp_deji_couple", "title": "双人浪漫光影票（含合影）", "price": 168, "original": 176, "sold": 1340, "for_scene": "couple"}
+    ],
+    "booking": {"type": "ticket", "label": "预约 14:30 场光影展", "party_default": 4},
+    "queue": {"need_queue": true, "wait_min": 20, "has_table": true},
+    "tickets_left": 36,
+    "dianping_notes": [
+      {"author": "拍照狂魔Lina", "avatar_color": "#F759AB", "likes": 521, "title": "南京出片率最高的展，随手拍都是大片", "body": "灯光太美了，建议穿浅色衣服。4个人一起逛不无聊，互相拍照。逛完直接德基里吃饭，不用跑。强推4人套票。", "images": ["place_photos/gen_deji_light_show.png"]},
+      {"author": "文艺青年阿哲", "avatar_color": "#722ED1", "likes": 203, "title": "约会好去处，氛围拉满", "body": "和女朋友来的，双人票还送合影，很有仪式感。人不算太多，慢慢逛了一个多小时。", "images": ["place_photos/note_deji_date.png"]}
+    ],
+    "reviews": [
+      {"text": "灯光太出片了，穿浅色衣服拍照绝绝子。", "useful": 88, "author": "拍照狂魔Lina"},
+      {"text": "逛完楼下就能吃饭，动线很顺。", "useful": 45, "author": "文艺青年阿哲"},
+      {"text": "周末人略多，建议预约下午早一点的场。", "useful": 30, "author": "momo"}
+    ]
+  },
+  {
+    "id": "museum_future_zero",
+    "name": "南京城市未来数字展",
+    "segment": "play",
+    "category": "展览/艺术",
+    "scenes": ["friends", "couple"],
+    "location": [118.7790, 32.0410],
+    "address": "建邺区江东中路国际青年文化中心 2F",
+    "distance_km": 1.8,
+    "rating": 4.3,
+    "review_count": 640,
+    "price_per_person": 70,
+    "tags": ["科技感", "数字艺术"],
+    "open_hours": "10:00-21:00",
+    "suit_for": ["朋友", "展览"],
+    "ai_pitch": "科技感数字展，离得近。不过今天票已售罄，先作为备选。",
+    "image": "place_photos/gen_museum_future.png",
+    "gallery": ["place_photos/gen_museum_future.png"],
+    "groupon": [
+      {"id": "grp_future_2", "title": "双人数字展票", "price": 128, "original": 140, "sold": 210}
+    ],
+    "booking": {"type": "ticket", "label": "预约数字展票", "party_default": 2},
+    "queue": {"need_queue": false, "wait_min": 0, "has_table": true},
+    "tickets_left": 0,
+    "dianping_notes": [
+      {"author": "科技宅小王", "avatar_color": "#13C2C2", "likes": 41, "title": "数字艺术爱好者会喜欢", "body": "互动装置挺多，适合喜欢科技感的朋友。规模不算大，一小时够逛。", "images": ["place_photos/gen_museum_future.png"]}
+    ],
+    "reviews": [
+      {"text": "互动装置多，科技迷会喜欢。", "useful": 20, "author": "科技宅小王"},
+      {"text": "规模偏小，一小时够。", "useful": 14, "author": "路人乙"}
+    ]
+  },
+  {
+    "id": "fuzimiao_snack_walk",
+    "name": "夫子庙 · 老南京小吃",
+    "segment": "play",
+    "category": "街区漫步",
+    "scenes": ["friends", "couple", "solo"],
+    "location": [118.7880, 32.0220],
+    "address": "秦淮区夫子庙步行街",
+    "distance_km": 6.1,
+    "rating": 4.6,
+    "review_count": 8800,
+    "price_per_person": 40,
+    "tags": ["逛吃", "古风", "夜景"],
+    "open_hours": "全天",
+    "suit_for": ["朋友", "情侣", "citywalk", "小吃", "一个人"],
+    "ai_pitch": "边逛边吃的老城南街区，一个人也能按自己的节奏慢慢走。傍晚秦淮河夜景很赞，想吃点小吃也方便。",
+    "image": "place_photos/gen_fuzimiao_snack_walk.png",
+    "gallery": ["place_photos/gen_fuzimiao_snack_walk.png"],
+    "groupon": [
+      {"id": "grp_fuzi_snack", "title": "秦淮小吃 8 件套通票", "price": 68, "original": 96, "sold": 3400, "for_scene": "friends"}
+    ],
+    "booking": {"type": "none", "label": "免预约，到店即逛"},
+    "queue": {"need_queue": false, "wait_min": 0, "has_table": true},
+    "tickets_left": null,
+    "dianping_notes": [
+      {"author": "吃货老饕", "avatar_color": "#FA8C16", "likes": 712, "title": "夫子庙逛吃攻略，小吃8件套真香", "body": "鸭血粉丝、盐水鸭、梅花糕、赤豆元宵……8件套一路吃过去刚好。傍晚来最好，灯一亮秦淮河绝美。人多但热闹。", "images": ["place_photos/gen_fuzimiao_snack_walk.png"]}
+    ],
+    "reviews": [
+      {"text": "8件套一路吃过去刚好，傍晚夜景绝美。", "useful": 102, "author": "吃货老饕"},
+      {"text": "周末人非常多，怕挤的避开高峰。", "useful": 56, "author": "momo"}
+    ]
+  },
+  {
+    "id": "green_bowl_hexi",
+    "name": "Green Bowl 轻食 · 河西店",
+    "segment": "eat",
+    "category": "轻食低脂",
+    "scenes": ["family", "couple", "friends", "solo"],
+    "location": [118.7359, 32.0161],
+    "address": "建邺区江东中路金陵天地 1F",
+    "distance_km": 0.3,
+    "rating": 4.6,
+    "review_count": 1980,
+    "price_per_person": 62,
+    "tags": ["轻食", "低脂", "可控卡路里"],
+    "open_hours": "10:30-21:00",
+    "suit_for": ["减肥", "轻食", "朋友", "亲子", "一个人"],
+    "ai_pitch": "你老婆在减肥，这家轻食低脂可控卡，离玩的地方就 100 米。鸡胸肉口碑不错，也有儿童友好的餐。",
+    "image": "place_photos/gen_green_bowl.png",
+    "gallery": ["place_photos/gen_green_bowl.png"],
+    "groupon": [
+      {"id": "grp_green_family", "title": "亲子轻食 3 人套餐（含儿童餐）", "price": 168, "original": 226, "sold": 560, "for_scene": "family", "includes": ["高蛋白主餐2份", "儿童餐1份", "无糖饮品3杯"]},
+      {"id": "grp_green_set", "title": "双人高蛋白轻食套餐", "price": 118, "original": 148, "sold": 1330, "for_scene": "couple"}
+    ],
+    "booking": {"type": "table", "label": "预约 15:40 三人桌", "party_default": 3},
+    "queue": {"need_queue": true, "wait_min": 35, "has_table": false},
+    "tickets_left": null,
+    "dianping_notes": [
+      {"author": "减脂少女Coco", "avatar_color": "#52C41A", "likes": 268, "title": "减肥期的快乐，鸡胸肉居然不柴", "body": "酱汁可以分装，热量标得很清楚。亲子套餐有儿童餐，带娃也能吃。就是饭点经常满座，建议预约或错峰。", "images": ["place_photos/gen_green_bowl.png"]},
+      {"author": "健身教练Mike", "avatar_color": "#73D13D", "likes": 134, "title": "增肌减脂都能点，配比合理", "body": "高蛋白套餐分量足，价格也合理。位置在金陵天地一楼，逛完直接来吃很方便。", "images": ["place_photos/note_green_coach.png"]}
+    ],
+    "reviews": [
+      {"text": "鸡胸肉不柴，酱汁可以分装，热量标得清楚。", "useful": 25, "author": "减脂少女Coco"},
+      {"text": "饭点经常满座，建议错峰或预约。", "useful": 21, "author": "健身教练Mike"},
+      {"text": "有儿童餐，带娃也合适。", "useful": 17, "author": "团子妈Vivian"}
+    ]
+  },
+  {
+    "id": "sprout_table",
+    "name": "Sprout Table 沙拉 · 新街口店",
+    "segment": "eat",
+    "category": "轻食低脂",
+    "scenes": ["family", "couple", "friends", "solo"],
+    "location": [118.7822, 32.0420],
+    "address": "秦淮区新街口德基二期 7F",
+    "distance_km": 4.5,
+    "rating": 4.5,
+    "review_count": 1120,
+    "price_per_person": 68,
+    "tags": ["轻食", "沙拉", "无糖饮品"],
+    "open_hours": "10:30-21:30",
+    "suit_for": ["减肥", "轻食", "朋友", "一个人", "安静"],
+    "ai_pitch": "新街口的轻食备选，沙拉种类多，一个人吃也舒服。环境干净，吃完还能在德基附近找地方坐会儿。",
+    "image": "place_photos/gen_sprout_table.png",
+    "gallery": ["place_photos/gen_sprout_table.png"],
+    "groupon": [
+      {"id": "grp_sprout_2", "title": "双人沙拉轻食套餐", "price": 108, "original": 136, "sold": 420, "for_scene": "couple"}
+    ],
+    "booking": {"type": "table", "label": "预约双人桌", "party_default": 2},
+    "queue": {"need_queue": true, "wait_min": 20, "has_table": true},
+    "tickets_left": null,
+    "dianping_notes": [
+      {"author": "沙拉控Anna", "avatar_color": "#95DE64", "likes": 77, "title": "新街口轻食，种类多分量足", "body": "沙拉可以自选配料，无糖饮品好喝。德基里逛街顺便吃，环境干净。", "images": ["place_photos/gen_sprout_table.png"]}
+    ],
+    "reviews": [
+      {"text": "沙拉可自选配料，无糖饮品好喝。", "useful": 19, "author": "沙拉控Anna"},
+      {"text": "德基里逛街顺便吃很方便。", "useful": 11, "author": "路人丙"}
+    ]
+  },
+  {
+    "id": "hexi_hotpot",
+    "name": "蜀大侠火锅 · 河西旗舰店",
+    "segment": "eat",
+    "category": "聚会餐厅",
+    "scenes": ["friends"],
+    "location": [118.7340, 32.0150],
+    "address": "建邺区江东中路金鹰世界 5F",
+    "distance_km": 0.6,
+    "rating": 4.5,
+    "review_count": 3260,
+    "price_per_person": 118,
+    "tags": ["火锅", "聚会", "热闹", "大桌"],
+    "open_hours": "11:00-23:00",
+    "suit_for": ["朋友", "聚会", "男女混合"],
+    "ai_pitch": "4 人聚会的热闹之选，大桌好聊天。不过你老婆减肥的话火锅偏重，仅在朋友局推荐。",
+    "image": "place_photos/gen_hexi_hotpot.png",
+    "gallery": ["place_photos/gen_hexi_hotpot.png"],
+    "groupon": [
+      {"id": "grp_hotpot_4", "title": "4人聚会畅吃套餐", "price": 398, "original": 512, "sold": 980, "for_scene": "friends", "includes": ["招牌锅底", "8荤8素", "饮品4杯", "免费小吃"]}
+    ],
+    "booking": {"type": "table", "label": "预约 4 人大桌", "party_default": 4},
+    "queue": {"need_queue": true, "wait_min": 40, "has_table": true},
+    "tickets_left": null,
+    "dianping_notes": [
+      {"author": "火锅死忠粉", "avatar_color": "#FF4D4F", "likes": 188, "title": "朋友聚会就该吃火锅，气氛绝了", "body": "4人套餐量很足，荤素搭配好。服务热情，还有变脸表演。周末排队久，建议先在美团取号。", "images": ["place_photos/gen_hexi_hotpot.png"]}
+    ],
+    "reviews": [
+      {"text": "4人套餐量足，气氛热闹，有变脸表演。", "useful": 67, "author": "火锅死忠粉"},
+      {"text": "周末排队久，建议先在美团取号。", "useful": 43, "author": "momo"}
+    ]
+  },
+  {
+    "id": "roundtable_bbq",
+    "name": "围炉圆桌烤肉 · 河西店",
+    "segment": "eat",
+    "category": "聚会餐厅",
+    "scenes": ["friends"],
+    "location": [118.7355, 32.0170],
+    "address": "建邺区江东中路万达广场 4F",
+    "distance_km": 0.7,
+    "rating": 4.4,
+    "review_count": 1740,
+    "price_per_person": 108,
+    "tags": ["烤肉", "聚会", "圆桌"],
+    "open_hours": "11:30-22:30",
+    "suit_for": ["朋友", "聚会", "男女混合"],
+    "ai_pitch": "圆桌烤肉，朋友聚会的换店备选，氛围也不错。",
+    "image": "place_photos/gen_roundtable_bbq.png",
+    "gallery": ["place_photos/gen_roundtable_bbq.png"],
+    "groupon": [
+      {"id": "grp_bbq_4", "title": "4人烤肉欢聚套餐", "price": 358, "original": 432, "sold": 510, "for_scene": "friends"}
+    ],
+    "booking": {"type": "table", "label": "预约 4 人圆桌", "party_default": 4},
+    "queue": {"need_queue": true, "wait_min": 25, "has_table": true},
+    "tickets_left": null,
+    "dianping_notes": [
+      {"author": "烤肉爱好者", "avatar_color": "#FFA940", "likes": 92, "title": "圆桌烤肉，朋友局很合适", "body": "肉质不错，圆桌大家围一圈很方便聊天。套餐性价比高。", "images": ["place_photos/note_roundtable_bbq.png"]}
+    ],
+    "reviews": [
+      {"text": "圆桌设计方便聊天，套餐性价比高。", "useful": 34, "author": "烤肉爱好者"}
+    ]
+  },
+  {
+    "id": "qinhuai_tapas",
+    "name": "秦淮人家 · 江南小馆（双人位）",
+    "segment": "eat",
+    "category": "约会餐厅",
+    "scenes": ["couple"],
+    "location": [118.7385, 32.0160],
+    "address": "建邺区金陵天地 2F 临河位",
+    "distance_km": 0.5,
+    "rating": 4.7,
+    "review_count": 2210,
+    "price_per_person": 158,
+    "tags": ["约会", "江景位", "环境好"],
+    "open_hours": "11:00-22:00",
+    "suit_for": ["情侣", "约会", "二人"],
+    "ai_pitch": "约会首选，临河双人位环境安静。江南菜精致，适合慢慢吃。我可以直接帮你预约靠窗的双人座。",
+    "image": "place_photos/gen_qinhuai_tapas.png",
+    "gallery": ["place_photos/gen_qinhuai_tapas.png"],
+    "groupon": [
+      {"id": "grp_qinhuai_couple", "title": "双人浪漫江南套餐", "price": 268, "original": 336, "sold": 720, "for_scene": "couple", "includes": ["精致双人套餐", "甜品2份", "靠窗位优先"]}
+    ],
+    "booking": {"type": "table", "label": "预约靠窗双人座", "party_default": 2},
+    "queue": {"need_queue": true, "wait_min": 20, "has_table": true},
+    "tickets_left": null,
+    "dianping_notes": [
+      {"author": "恋爱日记本", "avatar_color": "#EB2F96", "likes": 246, "title": "南京约会餐厅天花板，靠窗位绝了", "body": "提前订了靠窗双人位，能看到河景，氛围超好。菜品精致，分量适中，甜品好吃。服务很贴心，求婚的话这里也合适。", "images": ["place_photos/gen_qinhuai_tapas.png"]}
+    ],
+    "reviews": [
+      {"text": "靠窗双人位能看河景，氛围超好。", "useful": 78, "author": "恋爱日记本"},
+      {"text": "菜品精致，甜品好吃，服务贴心。", "useful": 52, "author": "momo"}
+    ]
+  },
+  {
+    "id": "lake_fit_cafe",
+    "name": "湖畔 Fit Cafe（江景轻食）",
+    "segment": "eat",
+    "category": "约会餐厅",
+    "scenes": ["couple"],
+    "location": [118.7350, 32.0200],
+    "address": "建邺区河西生态公园湖心步道",
+    "distance_km": 1.1,
+    "rating": 4.6,
+    "review_count": 980,
+    "price_per_person": 98,
+    "tags": ["江景", "咖啡", "轻食", "安静"],
+    "open_hours": "09:00-21:00",
+    "suit_for": ["情侣", "约会", "轻食", "一个人", "安静"],
+    "ai_pitch": "湖边咖啡轻食，安静又出片，一个人坐会儿也不尴尬，适合清淡吃完继续放空。",
+    "image": "place_photos/gen_lake_fit_cafe.png",
+    "gallery": ["place_photos/gen_lake_fit_cafe.png"],
+    "groupon": [
+      {"id": "grp_lakecafe_2", "title": "双人湖景下午茶", "price": 158, "original": 196, "sold": 340, "for_scene": "couple"}
+    ],
+    "booking": {"type": "table", "label": "预约湖景双人座", "party_default": 2},
+    "queue": {"need_queue": false, "wait_min": 10, "has_table": true},
+    "tickets_left": null,
+    "dianping_notes": [
+      {"author": "咖啡与猫", "avatar_color": "#36CFC9", "likes": 71, "title": "湖边安静咖啡，约会聊天好去处", "body": "环境很安静，靠窗能看湖。咖啡和轻食都不错，适合慢慢聊。", "images": ["place_photos/gen_lake_fit_cafe.png"]}
+    ],
+    "reviews": [
+      {"text": "环境安静，靠窗看湖，适合约会聊天。", "useful": 28, "author": "咖啡与猫"}
+    ]
+  },
+  {
+    "id": "qinhuai_bouquet",
+    "name": "秦淮花坊 · 鲜花速递",
+    "segment": "extra",
+    "category": "鲜花外卖",
+    "scenes": ["couple", "family"],
+    "location": [118.7365, 32.0155],
+    "address": "建邺区金陵天地花艺工坊",
+    "distance_km": 0.4,
+    "rating": 4.9,
+    "review_count": 560,
+    "price_per_person": 99,
+    "tags": ["鲜花", "30分钟达", "可送到餐厅"],
+    "open_hours": "08:00-22:00",
+    "suit_for": ["情侣", "约会", "惊喜", "纪念日"],
+    "ai_pitch": "约会想加点仪式感的话——点一束鲜花，30 分钟内直接送到你预约的餐厅，等你们入座刚好送达，给对方一个惊喜。",
+    "image": "place_photos/gen_qinhuai_bouquet.png",
+    "gallery": ["place_photos/gen_qinhuai_bouquet.png"],
+    "groupon": [
+      {"id": "grp_bouquet_rose", "title": "11 枝红玫瑰花束（含贺卡）", "price": 128, "original": 168, "sold": 890, "for_scene": "couple"},
+      {"id": "grp_bouquet_mix", "title": "向日葵满天星混搭束", "price": 99, "original": 128, "sold": 640}
+    ],
+    "booking": {"type": "delivery", "label": "下单鲜花，送到餐厅", "party_default": 1},
+    "queue": {"need_queue": false, "wait_min": 0, "has_table": true},
+    "tickets_left": null,
+    "dianping_notes": [
+      {"author": "浪漫制造机", "avatar_color": "#FF85C0", "likes": 158, "title": "送到餐厅的惊喜，女朋友感动哭了", "body": "提前下单让花店在我们入座时送到，附了张手写贺卡。配送很准时，花很新鲜。仪式感直接拉满！", "images": ["place_photos/gen_qinhuai_bouquet.png"]}
+    ],
+    "reviews": [
+      {"text": "送到餐厅刚好我们入座，仪式感拉满。", "useful": 49, "author": "浪漫制造机"},
+      {"text": "花很新鲜，配送准时，附手写贺卡。", "useful": 31, "author": "momo"}
+    ]
+  },
+  {
+    "id": "bloom_cake_hexi",
+    "name": "Bloom 蛋糕鲜花 · 河西店",
+    "segment": "extra",
+    "category": "蛋糕鲜花外卖",
+    "scenes": ["family", "couple"],
+    "location": [118.7368, 32.0152],
+    "address": "建邺区金陵天地 1F 烘焙工坊",
+    "distance_km": 0.3,
+    "rating": 4.8,
+    "review_count": 720,
+    "price_per_person": 138,
+    "tags": ["蛋糕", "鲜花", "生日惊喜", "送到店"],
+    "open_hours": "09:00-21:30",
+    "suit_for": ["亲子", "生日", "惊喜"],
+    "ai_pitch": "如果今天是孩子或家人的小日子——蛋糕+鲜花组合可以直接送到餐厅，给家庭聚餐加个惊喜环节。",
+    "image": "place_photos/gen_bloom_cake.png",
+    "gallery": ["place_photos/gen_bloom_cake.png"],
+    "groupon": [
+      {"id": "grp_bloom_combo", "title": "6寸蛋糕 + 桌花组合", "price": 198, "original": 256, "sold": 380, "for_scene": "family"}
+    ],
+    "booking": {"type": "delivery", "label": "下单蛋糕鲜花，送到餐厅", "party_default": 1},
+    "queue": {"need_queue": false, "wait_min": 0, "has_table": true},
+    "tickets_left": null,
+    "dianping_notes": [
+      {"author": "甜心妈妈", "avatar_color": "#FFADD2", "likes": 63, "title": "孩子生日惊喜，蛋糕送到餐厅", "body": "在餐厅给娃过生日，蛋糕和桌花一起送到，娃超开心。配送很准时，蛋糕颜值高。", "images": ["place_photos/gen_bloom_cake.png"]}
+    ],
+    "reviews": [
+      {"text": "蛋糕和桌花一起送到餐厅，娃超开心。", "useful": 26, "author": "甜心妈妈"}
+    ]
+  },
+  {
+    "id": "sweet_flower_xjk",
+    "name": "甜野花植 · 新街口店",
+    "segment": "extra",
+    "category": "鲜花外卖",
+    "scenes": ["couple"],
+    "location": [118.7805, 32.0428],
+    "address": "秦淮区新街口德基广场 B1",
+    "distance_km": 4.5,
+    "rating": 4.7,
+    "review_count": 410,
+    "price_per_person": 119,
+    "tags": ["鲜花", "ins风", "送到店"],
+    "open_hours": "09:00-21:00",
+    "suit_for": ["情侣", "约会"],
+    "ai_pitch": "ins 风花束的换店备选，离新街口近。",
+    "image": "place_photos/gen_sweet_flower_xjk.png",
+    "gallery": ["place_photos/gen_sweet_flower_xjk.png"],
+    "groupon": [
+      {"id": "grp_sweet_ins", "title": "ins风混色花束", "price": 109, "original": 139, "sold": 230, "for_scene": "couple"}
+    ],
+    "booking": {"type": "delivery", "label": "下单鲜花，送到餐厅", "party_default": 1},
+    "queue": {"need_queue": false, "wait_min": 0, "has_table": true},
+    "tickets_left": null,
+    "dianping_notes": [
+      {"author": "花艺爱好者", "avatar_color": "#FF7A45", "likes": 38, "title": "ins风花束颜值高", "body": "配色很高级，包装精致。新街口附近送花的好选择。", "images": ["place_photos/gen_sweet_flower_xjk.png"]}
+    ],
+    "reviews": [
+      {"text": "配色高级，包装精致，颜值高。", "useful": 17, "author": "花艺爱好者"}
+    ]
+  },
+  {
+    "id": "xuanwu_lake_walk",
+    "name": "玄武湖环湖漫步",
+    "segment": "extra",
+    "category": "街区漫步",
+    "scenes": ["family", "couple", "friends", "solo"],
+    "location": [118.7920, 32.0760],
+    "address": "玄武区玄武湖景区",
+    "distance_km": 5.2,
+    "rating": 4.7,
+    "review_count": 6200,
+    "price_per_person": 0,
+    "tags": ["免费", "湖景", "散步", "遛娃"],
+    "open_hours": "全天",
+    "suit_for": ["亲子", "情侣", "朋友", "散步", "一个人"],
+    "ai_pitch": "吃完饭消食的好去处，环湖散步免费，傍晚湖景很美，一个人走一段也很放松。",
+    "image": "place_photos/gen_xuanwu_lake_walk.png",
+    "gallery": ["place_photos/gen_xuanwu_lake_walk.png"],
+    "groupon": [],
+    "booking": {"type": "none", "label": "免费开放，到场即走"},
+    "queue": {"need_queue": false, "wait_min": 0, "has_table": true},
+    "tickets_left": null,
+    "dianping_notes": [
+      {"author": "城市漫步者", "avatar_color": "#52C41A", "likes": 134, "title": "南京傍晚最美环湖散步", "body": "免费开放，傍晚来最舒服。湖边步道宽，遛娃推车也方便。情侣散步也很浪漫。", "images": ["place_photos/gen_xuanwu_lake_walk.png"]}
+    ],
+    "reviews": [
+      {"text": "傍晚湖景很美，步道宽，遛娃推车方便。", "useful": 58, "author": "城市漫步者"}
+    ]
+  },
+  {
+    "id": "laomendong_walk",
+    "name": "老门东历史街区",
+    "segment": "extra",
+    "category": "街区漫步",
+    "scenes": ["friends", "couple", "solo"],
+    "location": [118.7860, 32.0150],
+    "address": "秦淮区老门东历史文化街区",
+    "distance_km": 6.4,
+    "rating": 4.6,
+    "review_count": 7100,
+    "price_per_person": 30,
+    "tags": ["古街", "夜景", "文创"],
+    "open_hours": "全天",
+    "suit_for": ["朋友", "情侣", "citywalk", "一个人"],
+    "ai_pitch": "饭后逛老门东，青砖小巷+文创小店，夜景上镜。一个人慢慢走也舒服，作为额外活动备选。",
+    "image": "place_photos/gen_laomendong_walk.png",
+    "gallery": ["place_photos/gen_laomendong_walk.png"],
+    "groupon": [],
+    "booking": {"type": "none", "label": "免费街区，到场即逛"},
+    "queue": {"need_queue": false, "wait_min": 0, "has_table": true},
+    "tickets_left": null,
+    "dianping_notes": [
+      {"author": "古风摄影师", "avatar_color": "#9254DE", "likes": 96, "title": "老门东青砖小巷，夜景超出片", "body": "文创小店很多，边逛边拍。傍晚华灯初上的时候最美。", "images": ["place_photos/gen_laomendong_walk.png"]}
+    ],
+    "reviews": [
+      {"text": "青砖小巷文创店多，夜景超出片。", "useful": 47, "author": "古风摄影师"}
+    ]
+  },
+  {
+    "id": "qinhuai_folk_art",
+    "name": "秦淮非遗手作体验馆",
+    "segment": "extra",
+    "category": "亲子手作",
+    "scenes": ["family"],
+    "location": [118.7375, 32.0145],
+    "address": "建邺区金陵天地 4F 非遗工坊",
+    "distance_km": 0.4,
+    "rating": 4.6,
+    "review_count": 430,
+    "price_per_person": 78,
+    "tags": ["手作", "非遗", "亲子DIY"],
+    "open_hours": "10:00-20:00",
+    "suit_for": ["亲子", "有娃", "DIY"],
+    "ai_pitch": "吃完饭带娃做个非遗手作（绒花/灯彩），离餐厅近，给一天收个有意义的尾。",
+    "image": "place_photos/gen_qinhuai_folk_art.png",
+    "gallery": ["place_photos/gen_qinhuai_folk_art.png"],
+    "groupon": [
+      {"id": "grp_folk_family", "title": "亲子绒花DIY 2大1小", "price": 158, "original": 204, "sold": 180, "for_scene": "family"}
+    ],
+    "booking": {"type": "ticket", "label": "预约亲子手作课", "party_default": 3},
+    "queue": {"need_queue": false, "wait_min": 5, "has_table": true},
+    "tickets_left": 9,
+    "dianping_notes": [
+      {"author": "手作妈妈", "avatar_color": "#36CFC9", "likes": 44, "title": "带娃做绒花，非遗体验很有意义", "body": "老师很专业，娃做了一朵小绒花带回家。离金陵天地的餐厅很近，吃完散步过来正好。", "images": ["place_photos/note_folk_art.png"]}
+    ],
+    "reviews": [
+      {"text": "老师专业，娃做的绒花能带回家，很有意义。", "useful": 23, "author": "手作妈妈"}
+    ]
+  }
+]

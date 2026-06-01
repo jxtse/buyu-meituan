@@ -1,0 +1,18 @@
+[project]
+name = "buyu-meituan"
+version = "1.0.0"
+description = "步语 BuYu × 美团 Hackathon 赛题06 — 周末闲时活动渐进式规划+执行 Agent"
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi>=0.110",
+    "uvicorn>=0.29",
+    "httpx>=0.27",
+    "python-multipart>=0.0.9",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "pytest-asyncio>=0.23"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
