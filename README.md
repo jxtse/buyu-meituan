@@ -6,7 +6,6 @@
 
 - 项目设计文档：[步语 BuYu · 美团 AI Hackathon 设计文档](https://jxtse.github.io/projects/meituan-ai-hackathon/)
 - 在线交互 Demo：[https://dan-newest-grant-headlines.trycloudflare.com/](https://dan-newest-grant-headlines.trycloudflare.com/)
-- GitHub 仓库：[https://github.com/jxtse/buyu-meituan](https://github.com/jxtse/buyu-meituan)
 
 ## 核心能力
 
@@ -35,7 +34,6 @@
 | 执行 | `meituan_book_table` / `meituan_buy_ticket` / `meituan_order_delivery` | 模拟订座、购票、外卖惊喜下单 |
 | 展示 | `show_recommendation_card` | 把 Agent 决策结果弹成手机内推荐卡 |
 | 对话 | `agent_speak` | Agent 主动向用户追问或解释 |
-| 记忆 | `agent_memory_write` / `agent_memory_read` | 写入并读取本轮会话中的偏好、选择和约束 |
 
 右侧 Agent 面板通过 `thinking / stage / tool_call / tool_result / card / execute_done` 事件展示推理链路。公网环境下，为避免 SSE 被代理缓冲，关键预设和用户点击动作会随接口响应返回 `agent_events`，由前端按时间线回放，保证链路与卡片生成同步。
 
