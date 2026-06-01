@@ -457,7 +457,7 @@ class Session:
         self.location: dict[str, Any] = {}
         self.intake_active = False
         self.intake_messages: list[str] = []
-        self.intake_memory: dict[str, Any] = {
+        self.intake_context: dict[str, Any] = {
             "raw": [],
             "preferences": [],
             "area": None,
@@ -510,7 +510,7 @@ class Session:
         if source == "preset":
             plan = self._load_preset_plan(preset_id)
         else:
-            self._stage("plan", "编排下午行程分段（玩→吃→额外，软固定可调）")
+            self._stage("plan", "按用户目标编排可执行分段")
             plan = self._plan_segments(self.constraints)
         self.narrative = plan.get("narrative", "")
         self.segments = [Segment(kind=s["kind"], intent=s.get("intent", ""))
@@ -548,15 +548,12 @@ class Session:
         self.intake_messages.append(message)
         self._stage("chat", "ReAct 需求澄清 Agent")
         self._think(
-            "ReAct step 1：先把用户这轮话写入会话记忆，再判断是否已经足够调用地点检索。"
-            "如果缺少同行人、时间或区域，就调用 agent_speak 继续问；如果信息足够，再进入美团/点评工具链。")
-        facts = self._update_intake_memory(message)
-        self._agent_tool("agent_memory_write", {
-            "message": message,
-            "extracted": facts,
-        }, {
-            "memory": self.intake_memory,
-        })
+            "ReAct step 1：从当前多轮对话里抽取目标、区域、同行人和时间，"
+            "判断是否已经足够调用地点检索。如果缺少关键信息，就调用 agent_speak 继续问；"
+            "如果信息足够，再进入美团/点评工具链。")
+        facts = self._update_intake_context(message)
+        self._emit({"type": "context_update", "source": "xiaotuan_agent",
+                    "extracted": facts, "context": self.intake_context})
 
         missing = self._intake_missing_slots()
         if first_turn or missing:
@@ -589,31 +586,31 @@ class Session:
 
         return self._complete_intake_planning()
 
-    def _update_intake_memory(self, message: str) -> dict[str, Any]:
+    def _update_intake_context(self, message: str) -> dict[str, Any]:
         facts = _extract_intake_facts(message)
-        self.intake_memory["raw"].append(message)
+        self.intake_context["raw"].append(message)
         for key in ("area", "time", "companions", "goal"):
             if facts.get(key):
-                self.intake_memory[key] = facts[key]
-        prefs = set(self.intake_memory.get("preferences") or [])
+                self.intake_context[key] = facts[key]
+        prefs = set(self.intake_context.get("preferences") or [])
         prefs.update(facts.get("preferences") or [])
-        self.intake_memory["preferences"] = sorted(prefs)
+        self.intake_context["preferences"] = sorted(prefs)
         return facts
 
     def _intake_missing_slots(self) -> list[str]:
         missing: list[str] = []
-        if not self.intake_memory.get("goal"):
+        if not self.intake_context.get("goal"):
             missing.append("想做什么")
-        if not self.intake_memory.get("area"):
+        if not self.intake_context.get("area"):
             missing.append("附近区域")
-        if not self.intake_memory.get("companions"):
+        if not self.intake_context.get("companions"):
             missing.append("同行人")
-        if not self.intake_memory.get("time"):
+        if not self.intake_context.get("time"):
             missing.append("时间")
         return missing
 
     def _intake_followup_reply(self, missing: list[str]) -> str:
-        goal = self.intake_memory.get("goal") or "坐一会儿"
+        goal = self.intake_context.get("goal") or "坐一会儿"
         if set(missing) >= {"附近区域", "同行人", "时间"}:
             return f"可以，我先记下你想{goal}。你打算在哪个商圈或地铁站附近？是一个人还是和朋友？大概下午还是晚上去？"
         parts = []
@@ -677,22 +674,17 @@ class Session:
     def _complete_intake_planning(self) -> dict[str, Any]:
         combined_query = "；".join(self.intake_messages)
         self.query = combined_query
-        self._stage("intent", "LLM ReAct 汇总记忆 → 结构化约束")
-        self._agent_tool("agent_memory_read", {
-            "fields": ["goal", "area", "companions", "time", "preferences"],
-        }, {
-            "memory": self.intake_memory,
-        })
+        self._stage("intent", "LLM ReAct 汇总多轮上下文 → 结构化约束")
         self.constraints = self._parse_intent(combined_query)
         prefs = set(self.constraints.get("preferences") or [])
-        prefs.update(self.intake_memory.get("preferences") or [])
-        if self.intake_memory.get("area"):
-            prefs.add(str(self.intake_memory["area"]))
+        prefs.update(self.intake_context.get("preferences") or [])
+        if self.intake_context.get("area"):
+            prefs.add(str(self.intake_context["area"]))
         self.constraints["preferences"] = sorted(prefs)
         self._emit({"type": "constraints", "data": self.constraints})
         self._think(f"需求理解：{self.constraints.get('summary', '')}")
 
-        self._stage("plan", "ReAct Planning：基于记忆生成分段")
+        self._stage("plan", "ReAct Planning：基于当前对话上下文生成分段")
         plan = self._plan_segments(self.constraints)
         self.narrative = plan.get("narrative", "")
         self.segments = [Segment(kind=s["kind"], intent=s.get("intent", ""))
@@ -744,9 +736,9 @@ class Session:
     ) -> list[dict[str, Any]]:
         return [
             {"type": "stage", "stage": "chat", "detail": "ReAct 需求澄清 Agent", "ts": 0.0},
-            {"type": "thinking", "text": "ReAct：观察用户输入，先写入 memory，再决定是继续追问还是进入工具检索。", "ts": 0.1},
-            {"type": "tool_call", "name": "agent_memory_write", "args": {"message": message}, "ts": 0.2},
-            {"type": "tool_result", "name": "agent_memory_write", "result": {"memory": self.intake_memory}, "ts": 0.3},
+            {"type": "thinking", "text": "ReAct：观察用户输入，从当前对话里更新需求槽位，再决定是继续追问还是进入地点检索。", "ts": 0.1},
+            {"type": "context_update", "source": "xiaotuan_agent",
+             "result": {"context": self.intake_context}, "ts": 0.25},
             {"type": "thinking", "text": "当前需求还没有形成可执行的地点检索约束，先用对话工具补齐缺口，而不是猜一个地点。", "ts": 0.4},
             {"type": "tool_call", "name": "agent_speak", "args": {
                 "first_turn": first_turn,
@@ -758,12 +750,10 @@ class Session:
     def _intake_complete_replay_events(self, card: dict[str, Any] | None) -> list[dict[str, Any]]:
         poi = (card or {}).get("poi", {})
         return [
-            {"type": "stage", "stage": "memory", "detail": "读取多轮对话记忆", "ts": 0.0},
-            {"type": "tool_call", "name": "agent_memory_read", "args": {
-                "fields": ["goal", "area", "companions", "time", "preferences"],
-            }, "ts": 0.1},
-            {"type": "tool_result", "name": "agent_memory_read", "result": {"memory": self.intake_memory}, "ts": 0.2},
-            {"type": "stage", "stage": "intent", "detail": "LLM 汇总记忆并生成结构化约束", "ts": 0.3},
+            {"type": "stage", "stage": "context", "detail": "汇总当前多轮对话上下文", "ts": 0.0},
+            {"type": "context_update", "source": "xiaotuan_agent",
+             "result": {"context": self.intake_context}, "ts": 0.2},
+            {"type": "stage", "stage": "intent", "detail": "LLM 汇总上下文并生成结构化约束", "ts": 0.3},
             {"type": "constraints", "data": self.constraints, "ts": 0.4},
             {"type": "stage", "stage": "plan", "detail": "规划渐进式推荐段落", "ts": 0.5},
             {"type": "segment_plan", "narrative": self.narrative, "segments": [
@@ -823,8 +813,8 @@ class Session:
             {"type": "stage", "stage": "intent", "detail": "解析首页场景 → 结构化约束", "ts": 0.4},
             {"type": "thinking", "text": preset.get("simulated_events", ["我先把同行人、时间和预算约束固定下来。"])[0], "ts": 0.5},
             {"type": "constraints", "data": self.constraints, "ts": 0.7},
-            {"type": "stage", "stage": "memory", "detail": "LoRA+RL 通用技能内化 + 结构化事实记忆校准", "ts": 0.8},
-            {"type": "thinking", "text": self._parametric_memory_thought(preset_id), "ts": 0.85},
+            {"type": "stage", "stage": "skill", "detail": "LoRA+RL 通用规划习惯内化", "ts": 0.8},
+            {"type": "thinking", "text": self._parametric_skill_thought(preset_id), "ts": 0.85},
             {"type": "stage", "stage": "plan", "detail": "生成三段式下午方案", "ts": 0.9},
             {"type": "thinking", "text": self._preset_plan_thought(preset_id), "ts": 1.0},
             {"type": "segment_plan", "narrative": self.narrative, "segments": segments, "ts": 1.2},
@@ -843,7 +833,7 @@ class Session:
             {"type": "card", "card": card, "segment_index": self.idx, "ts": 2.2},
         ]
 
-    def _parametric_memory_thought(self, preset_id: str | None) -> str:
+    def _parametric_skill_thought(self, preset_id: str | None) -> str:
         scene = self._preset(preset_id)["constraints"].get("scene")
         scene_label = {
             "family": "亲子周末",
@@ -852,10 +842,9 @@ class Session:
             "solo": "独处放松",
         }.get(scene, "本次")
         return (
-            f"这里先走参数化记忆层：LoRA+RL 已把通用技能内化成稳定的规划习惯，比如先控制路线摩擦、再检查实时可用性、"
-            f"遇到等待过长时自动改选。{scene_label}只作为任务特定规则按需进入上下文，避免把冗长 skill 全塞进提示词造成注意力稀释。"
-            "同时，商圈、人数、预算、排队状态和偏好标签属于有结构的事实记忆，比随机逐字背诵更容易用极少参数承载；"
-            "所以我会先用这层记忆给候选打底，再调用本地生活库做精确检索。"
+            f"这里先走参数化技能层：LoRA+RL 已把通用规划习惯内化为稳定能力，比如先控制路线摩擦、再检查实时可用性、"
+            f"遇到等待过长时自动改选。{scene_label}只作为任务特定规则按需进入当前上下文，避免把冗长 skill 全塞进提示词造成注意力稀释。"
+            "商圈、人数、预算、排队状态和偏好标签仍由本地生活工具实时返回；会话内的槽位直接来自当前对话，不再暴露额外读写工具。"
         )
 
     def _preset_plan_thought(self, preset_id: str | None) -> str:
@@ -1070,6 +1059,31 @@ class Session:
 
     def _plan_segments(self, constraints: dict) -> dict:
         scene = constraints.get("scene")
+        explicit_text = " ".join([
+            self.query,
+            " ".join(str(p) for p in constraints.get("preferences") or []),
+        ])
+        text = " ".join([explicit_text, str(constraints.get("summary") or "")])
+        wants_food_or_rest = any(k in text for k in ("吃", "饭", "餐", "清淡", "轻食", "咖啡", "坐一会", "坐会"))
+        wants_activity = any(k in explicit_text for k in ("玩", "遛娃", "看展", "展览", "逛", "散步", "citywalk", "Citywalk", "密室", "动物园"))
+        if wants_food_or_rest and not wants_activity:
+            if scene == "solo":
+                narrative = "我帮你按「先吃点清淡的 → 再安静坐会儿」来安排。"
+                extra = "最后留一个安静坐会儿或轻松散步的收尾"
+            elif scene == "couple":
+                narrative = "我帮你按「先吃饭 → 再加一个轻量惊喜」来安排。"
+                extra = "最后安排一个不打扰节奏的小惊喜"
+            else:
+                narrative = "我帮你按「先吃饭 → 再轻松收尾」来安排。"
+                extra = "饭后安排一个不用折腾的收尾点"
+            self._think("用户目标更偏吃饭/坐会儿，本轮不强行插入玩乐段，直接从餐食候选开始。")
+            return {
+                "segments": [
+                    {"kind": "eat", "intent": "先找一家符合口味和区域的餐食地点"},
+                    {"kind": "extra", "intent": extra},
+                ],
+                "narrative": narrative,
+            }
         if scene == "couple":
             narrative = "我帮你按「先逛 → 再吃 → 加个小惊喜」来安排这个约会。"
             extra = "最后安排一个不打扰节奏的小惊喜"
@@ -1151,8 +1165,11 @@ class Session:
         rejected: set[str] | None = None,
         limit: int = 6,
     ) -> list[dict[str, Any]]:
+        query = self._search_query()
+        preferences = self.constraints.get("preferences") or []
         candidates = self.mock.search_merchants(
-            segment=segment, scene=scene, exclude=rejected or set(), limit=limit)
+            segment=segment, scene=scene, exclude=rejected or set(),
+            query=query, preferences=preferences, limit=limit)
         if candidates:
             return candidates
         compatible = {
@@ -1165,7 +1182,8 @@ class Session:
         out: list[dict[str, Any]] = []
         for fallback_scene in compatible:
             for item in self.mock.search_merchants(
-                    segment=segment, scene=fallback_scene, exclude=rejected or set(), limit=limit):
+                    segment=segment, scene=fallback_scene, exclude=rejected or set(),
+                    query=query, preferences=preferences, limit=limit):
                 if item["id"] in seen:
                     continue
                 if scene == "solo" and not self._solo_compatible(item):
@@ -1173,6 +1191,14 @@ class Session:
                 seen.add(item["id"])
                 out.append(item)
         return out[:limit]
+
+    def _search_query(self) -> str:
+        parts = [
+            self.query,
+            str(self.constraints.get("summary") or ""),
+            " ".join(str(p) for p in self.constraints.get("preferences") or []),
+        ]
+        return "；".join(p for p in parts if p)
 
     @staticmethod
     def _solo_compatible(poi: dict[str, Any]) -> bool:
@@ -1305,7 +1331,10 @@ class Session:
         seg = self.segments[self.idx]
         scene = self.constraints.get("scene")
         candidates = self.mock.search_merchants(
-            segment=seg.kind, scene=scene, exclude=seg.rejected, limit=6)
+            segment=seg.kind, scene=scene, exclude=seg.rejected,
+            query=self._search_query() + "；" + message,
+            preferences=[*(self.constraints.get("preferences") or []), message],
+            limit=6)
         cur = seg.current.poi if seg.current else {}
         self._stage("chat", "多轮对话理解 + 决定是否换店")
         try:
@@ -1352,7 +1381,8 @@ class Session:
         if segment_kind:
             for c in self.mock.search_merchants(
                     segment=segment_kind, scene=self.constraints.get("scene"),
-                    exclude={poi_id}, limit=5):
+                    exclude={poi_id}, query=self._search_query(),
+                    preferences=self.constraints.get("preferences") or [], limit=5):
                 alts.append({"id": c["id"], "name": c["name"],
                              "rating": c["rating"], "distance_km": c["distance_km"],
                              "price_per_person": c["price_per_person"],
@@ -1432,6 +1462,7 @@ class Session:
             res = self.mock.execute_booking(
                 poi_id, party_size=party, time_str=time_str,
                 target_address=plan["stops"][0]["name"] if stop["segment_kind"] == "extra" else None)
+            tool_name = self._booking_tool_for_poi(poi_id, stop["segment_kind"])
 
             # 无座 / 无票 → 同段换备选重试
             heal_info = None
@@ -1441,6 +1472,7 @@ class Session:
                     res = heal_info["result"]
                     stop = {**stop, "poi_id": heal_info["poi_id"],
                             "name": heal_info["name"]}
+                    tool_name = self._booking_tool_for_poi(heal_info["poi_id"], stop["segment_kind"])
             if res.get("status") == "ok":
                 booked_times.add(time_str)
             results.append({
@@ -1449,7 +1481,7 @@ class Session:
                 "confirm": res.get("confirm"), "order_id": res.get("order_id"),
                 "eta_min": res.get("eta_min"), "healed": heal_info is not None,
                 "heal_note": heal_info.get("note") if heal_info else None,
-                "time": time_str})
+                "time": time_str, "tool_name": tool_name})
         ok = all(r["status"] == "ok" for r in results)
         self._emit({"type": "execute_done", "ok": ok, "results": results})
         return {"ok": ok, "results": results, "plan": plan,
@@ -1463,7 +1495,8 @@ class Session:
                     "poi": self.mock.get(failed_id)["name"]})
         alts = self.mock.search_merchants(
             segment=seg.kind, scene=self.constraints.get("scene"),
-            exclude={failed_id} | seg.rejected, limit=5)
+            exclude={failed_id} | seg.rejected, query=self._search_query(),
+            preferences=self.constraints.get("preferences") or [], limit=5)
         for alt in alts:
             res = self.mock.execute_booking(
                 alt["id"], party_size=party, time_str=time_str)
@@ -1483,6 +1516,16 @@ class Session:
             "extra": "meituan_order_delivery",
         }.get(segment_kind, "meituan_execute_booking")
 
+    def _booking_tool_for_poi(self, poi_id: str, segment_kind: str) -> str:
+        booking_type = self.mock.get(poi_id).get("booking", {}).get("type")
+        if booking_type == "table":
+            return "meituan_book_table"
+        if booking_type == "ticket":
+            return "meituan_buy_ticket"
+        if booking_type == "delivery":
+            return "meituan_order_delivery"
+        return self._booking_tool_name(segment_kind)
+
     def _execute_agent_events(self, results: list[dict[str, Any]], ok: bool) -> list[dict[str, Any]]:
         events: list[dict[str, Any]] = [
             {"type": "user_action", "text": "用户点击「一键执行」", "ts": 0.0},
@@ -1491,7 +1534,7 @@ class Session:
         ]
         ts = 0.3
         for res in results:
-            tool = self._booking_tool_name(res.get("segment_kind", ""))
+            tool = res.get("tool_name") or self._booking_tool_name(res.get("segment_kind", ""))
             events.append({"type": "tool_call", "name": tool, "args": {
                 "name": res.get("name"),
                 "time": res.get("time"),

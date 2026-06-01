@@ -23,7 +23,7 @@ let voiceState = { recognition: null, listening: false, holdMode: false, longPre
 // ---------------- SSE ----------------
 const STAGE_LABEL = {
   locate: '定位', intent: '理解需求', plan: '编排行程', search: '检索候选',
-  memory: '记忆校准', reason: '推荐决策', chat: '对话', plan_ready: '生成方案', execute: '执行下单',
+  context: '上下文整理', skill: '技能内化', reason: '推荐决策', chat: '对话', plan_ready: '生成方案', execute: '执行下单',
 };
 function connectSSE() {
   const es = new EventSource('/api/events');

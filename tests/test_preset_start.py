@@ -21,6 +21,25 @@ class FakeLLM:
         }, None
 
 
+class SoloEatLLM:
+    def __init__(self):
+        self.calls = 0
+
+    def chat_json(self, *, system, user, model=None, retries=0):
+        self.calls += 1
+        return {
+            "scene": "solo",
+            "adults": 1,
+            "kids": 0,
+            "kid_age": None,
+            "diet": ["清淡"],
+            "time_window": {"start": "14:00", "hours": 3},
+            "budget_level": "medium",
+            "preferences": ["一个人", "新街口", "清淡", "安静", "坐一会儿"],
+            "summary": "一个人在新街口附近吃清淡一点，并找个安静地方坐一会儿。",
+        }, None
+
+
 class CollectingBus:
     def __init__(self):
         self.events = []
@@ -68,6 +87,20 @@ def test_custom_start_still_calls_llm_for_intent():
     assert result["constraints"]["summary"] == "自定义 LLM 解析结果"
 
 
+def test_custom_food_only_query_starts_with_eat_segment_and_xinjiekou_match():
+    bus = CollectingBus()
+    llm = SoloEatLLM()
+    session = Session(llm=llm, mock=MeituanMock(bus=bus), bus=bus)
+
+    result = session.start("一个人，现在去，新街口附近，想吃清淡一点，也想安静坐一会儿", source="custom")
+
+    assert llm.calls == 1
+    assert [s["kind"] for s in result["segments"]] == ["eat", "extra"]
+    assert result["card"]["poi"]["id"] == "deji_green_tea"
+    assert "新街口" in result["card"]["poi"]["match_reasons"]
+    assert "清淡" in result["card"]["poi"]["match_reasons"]
+
+
 def test_custom_start_greeting_asks_for_needs_without_recommending_card():
     session, llm, bus = _session()
 
@@ -108,9 +141,9 @@ def test_intake_agent_remembers_context_and_asks_specific_followup():
     assert {g["slot"] for g in result["intake_options"]} == {"area", "companions", "time"}
     assert any(o["value"] == "和朋友" for g in result["intake_options"] for o in g["options"])
     assert any(o["value"] == "现在去" for g in result["intake_options"] for o in g["options"])
-    assert "坐一会儿" in session.intake_memory["preferences"]
-    assert any(e.get("type") == "tool_call" and e.get("name") == "agent_memory_write"
-               for e in bus.events)
+    assert "坐一会儿" in session.intake_context["preferences"]
+    assert not any(e.get("type") == "tool_call" and str(e.get("name", "")).startswith("agent_memory")
+                   for e in bus.events)
     assert any(e.get("type") == "thinking" and "ReAct" in e.get("text", "")
                for e in bus.events)
 
@@ -152,9 +185,9 @@ def test_intake_agent_treats_now_and_anywhere_as_enough_context():
     assert result.get("needs_more_info") is not True
     assert result["card"]
     assert result["segments"]
-    assert session.intake_memory["time"] == "现在"
-    assert session.intake_memory["area"] == "不限区域"
-    assert "哪里都行" in session.intake_memory["preferences"]
+    assert session.intake_context["time"] == "现在"
+    assert session.intake_context["area"] == "不限区域"
+    assert "哪里都行" in session.intake_context["preferences"]
     assert "现在" in result["constraints"]["preferences"]
     assert "哪里都行" in result["constraints"]["preferences"]
     assert any(e.get("type") == "tool_call" and e.get("name") == "dianping_search"
@@ -193,7 +226,8 @@ def test_solo_preset_uses_solo_compatible_candidate_not_family_fallback():
     assert result["card"]["poi"]["id"] != "kiddo_lab"
     assert result["card"]["poi"]["segment"] == "play"
     assert "solo" in result["card"]["poi"]["scenes"]
-    assert not result["card"].get("groupon")
+    if result["card"].get("groupon"):
+        assert result["card"]["groupon"].get("for_scene") == "solo"
     assert search_result["result"]["count"] > 0
 
 
@@ -214,7 +248,8 @@ def test_accept_returns_synchronized_agent_events_for_next_card():
     result = session.accept()
 
     assert result["card"]["poi"]["segment"] == "eat"
-    assert result["card"]["poi"]["id"] == "sprout_table"
+    assert result["card"]["poi"]["queue"]["has_table"] is True
+    assert "family" in result["card"]["poi"]["scenes"]
     assert result["agent_delay_ms"] > 0
     assert result["agent_events"][0]["type"] == "user_action"
     assert "就这家" in result["agent_events"][0]["text"]
@@ -227,7 +262,7 @@ def test_accept_returns_synchronized_agent_events_for_next_card():
                for e in result["agent_events"])
     thought_texts = [e.get("text", "") for e in result["agent_events"]
                      if e.get("type") == "thinking"]
-    assert any(len(t) >= 90 and "Green Bowl" in t and "Sprout Table" in t
+    assert any(len(t) >= 90 and "实时" in t and "可订" in t
                for t in thought_texts)
     assert result["agent_events"][-1]["type"] == "card"
     assert result["agent_events"][-1]["card"]["poi"]["id"] == result["card"]["poi"]["id"]
@@ -263,6 +298,21 @@ def test_execute_returns_synchronized_agent_events_for_one_click_booking():
     assert result["agent_events"][-1]["type"] == "execute_done"
 
 
+def test_execute_replay_tool_name_uses_booking_type_not_segment_kind():
+    bus = CollectingBus()
+    llm = SoloEatLLM()
+    session = Session(llm=llm, mock=MeituanMock(bus=bus), bus=bus)
+    session.start("一个人，现在去，新街口附近，想吃清淡一点，也想安静坐一会儿", source="custom")
+    session.accept()
+    session.accept()
+
+    result = session.execute()
+
+    calls = [e for e in result["agent_events"] if e.get("type") == "tool_call"]
+    assert [c["name"] for c in calls] == ["meituan_book_table", "meituan_book_table"]
+    assert all(r["tool_name"] == "meituan_book_table" for r in result["results"])
+
+
 def test_agent_thoughts_are_specific_and_not_generic_templates():
     session, _llm, _bus = _session()
     session.start("preset query", source="preset", preset_id="family")
@@ -296,7 +346,7 @@ def test_preset_first_card_thoughts_are_customized_for_each_scene():
         assert all(bad not in "\n".join(thought_texts) for bad in forbidden)
 
 
-def test_preset_agent_chain_exposes_parametric_memory_concept_outside_cards():
+def test_preset_agent_chain_exposes_parametric_skill_concept_outside_cards():
     session, _llm, _bus = _session()
 
     result = session.start("preset query", source="preset", preset_id="family")
@@ -310,11 +360,12 @@ def test_preset_agent_chain_exposes_parametric_memory_concept_outside_cards():
         for key in ("summary", "suggestion")
     )
 
-    assert "LoRA+RL" in event_text
-    assert "通用技能内化" in event_text
-    assert "结构化事实记忆" in event_text
-    assert "LoRA+RL" not in card_text
-    assert "通用技能内化" not in card_text
+    assert "LoRA" in event_text
+    assert "通用规划习惯" in event_text
+    assert "手动 memory" not in event_text
+    assert "agent_memory" not in event_text
+    assert "LoRA" not in card_text
+    assert "通用规划习惯" not in card_text
 
 
 def test_preset_replay_has_slower_thinking_and_tool_latency():

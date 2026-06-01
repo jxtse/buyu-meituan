@@ -1,0 +1,457 @@
+[
+  {
+    "id": "nanjing_museum_republic",
+    "name": "南京博物院 · 民国馆慢逛",
+    "segment": "play",
+    "category": "博物馆",
+    "scenes": ["couple", "friends", "solo", "family"],
+    "location": [118.8302, 32.0416],
+    "address": "玄武区中山东路 321 号南京博物院内",
+    "rating": 4.9,
+    "review_count": 18600,
+    "price_per_person": 0,
+    "tags": ["民国馆", "展览", "室内", "文化"],
+    "open_hours": "09:00-17:00",
+    "suit_for": ["一个人", "朋友", "情侣", "亲子", "看展", "雨天"],
+    "ai_pitch": "南京代表性博物馆，民国馆适合慢慢逛和拍照；免费但需要预约，独处、约会和朋友局都能自然展开话题。",
+    "image": "place_photos/gen_nanjing_museum_republic.png",
+    "gallery": ["place_photos/gen_nanjing_museum_republic.png", "place_photos/gen_deji_light_show.png"],
+    "groupon": [],
+    "booking": {"type": "ticket", "label": "预约免费参观时段", "party_default": 2},
+    "queue": {"need_queue": true, "wait_min": 12, "has_table": true},
+    "tickets_left": 80,
+    "dianping_notes": [
+      {"author": "南博慢逛者", "avatar_color": "#8C6A4A", "likes": 642, "title": "一个人也能逛到忘记时间", "body": "民国馆像走进老南京街景，路线清楚，雨天也不影响。适合先看展再接新街口晚饭。", "images": ["place_photos/gen_nanjing_museum_republic.png"]},
+      {"author": "周末摄影机", "avatar_color": "#597EF7", "likes": 284, "title": "约会不尴尬的文化场", "body": "不用一直找话题，展陈本身就能带着聊。建议提前预约下午场，逛完去德基吃饭很顺。", "images": ["place_photos/gen_deji_light_show.png"]}
+    ],
+    "reviews": [
+      {"text": "民国馆很有沉浸感，一个人也不会尴尬。", "useful": 112, "author": "南博慢逛者"},
+      {"text": "免费但要预约，周末热门时段建议提前锁定。", "useful": 87, "author": "小林"},
+      {"text": "看完展再去新街口吃饭，动线很舒服。", "useful": 61, "author": "Citywalker"}
+    ]
+  },
+  {
+    "id": "presidential_plane_walk",
+    "name": "总统府梧桐院 Citywalk",
+    "segment": "play",
+    "category": "历史街区",
+    "scenes": ["couple", "friends", "solo"],
+    "location": [118.7926, 32.0441],
+    "address": "玄武区长江路 292 号周边",
+    "rating": 4.7,
+    "review_count": 9800,
+    "price_per_person": 35,
+    "tags": ["民国建筑", "梧桐", "citywalk", "拍照"],
+    "open_hours": "08:30-17:30",
+    "suit_for": ["一个人", "情侣", "朋友", "散步", "拍照"],
+    "ai_pitch": "长江路梧桐和民国建筑密度高，适合一个人低压力散步，也适合约会前半段自然制造话题。",
+    "image": "place_photos/gen_presidential_plane_walk.png",
+    "gallery": ["place_photos/gen_presidential_plane_walk.png"],
+    "groupon": [{"id": "grp_president_audio", "title": "总统府语音导览双人套", "price": 58, "original": 70, "sold": 920, "for_scene": "couple"}],
+    "booking": {"type": "ticket", "label": "预约历史街区导览", "party_default": 2},
+    "queue": {"need_queue": true, "wait_min": 18, "has_table": true},
+    "tickets_left": 48,
+    "dianping_notes": [
+      {"author": "梧桐树下", "avatar_color": "#52C41A", "likes": 311, "title": "一个人沿着长江路走很舒服", "body": "树荫多，建筑好看，不需要强互动。下午逛一圈再去新街口吃饭刚好。", "images": ["place_photos/gen_presidential_plane_walk.png"]}
+    ],
+    "reviews": [
+      {"text": "梧桐树和民国建筑很有南京味。", "useful": 76, "author": "梧桐树下"},
+      {"text": "适合拍照，但周末入口会排一会儿。", "useful": 52, "author": "阿南"},
+      {"text": "和1912、新街口能连成一条轻松路线。", "useful": 40, "author": "Judy"}
+    ]
+  },
+  {
+    "id": "jinling_yanjili_night",
+    "name": "金陵小城 · 燕集里夜游",
+    "segment": "play",
+    "category": "夜游街区",
+    "scenes": ["couple", "friends", "family"],
+    "location": [118.7875, 31.8868],
+    "address": "江宁区牛首大道金陵小城燕集里",
+    "rating": 4.6,
+    "review_count": 7200,
+    "price_per_person": 70,
+    "tags": ["夜景", "国风", "拍照", "灯会"],
+    "open_hours": "16:00-21:30",
+    "suit_for": ["情侣", "朋友", "亲子", "拍照"],
+    "ai_pitch": "国风夜景辨识度强，适合把晚间约会或朋友拍照安排得更有记忆点；缺点是离主城较远，适合时间宽裕时选。",
+    "image": "place_photos/gen_jinling_yanjili_night.png",
+    "gallery": ["place_photos/gen_jinling_yanjili_night.png", "place_photos/jinlingtiandi_night.jpg"],
+    "groupon": [{"id": "grp_yanjili_pair", "title": "夜游双人票", "price": 128, "original": 140, "sold": 1300, "for_scene": "couple"}],
+    "booking": {"type": "ticket", "label": "预约夜游入园票", "party_default": 2},
+    "queue": {"need_queue": true, "wait_min": 25, "has_table": true},
+    "tickets_left": 32,
+    "dianping_notes": [
+      {"author": "夜景收藏家", "avatar_color": "#722ED1", "likes": 433, "title": "灯亮起来后很像走进画里", "body": "适合拍照和慢慢逛，情侣和朋友都合适。建议别排太满，留足路上时间。", "images": ["place_photos/gen_jinling_yanjili_night.png"]}
+    ],
+    "reviews": [
+      {"text": "夜景氛围很好，适合拍照。", "useful": 90, "author": "夜景收藏家"},
+      {"text": "离主城远，最好提前安排交通。", "useful": 58, "author": "阿圆"},
+      {"text": "国风街区小朋友也会喜欢。", "useful": 35, "author": "豆豆妈"}
+    ]
+  },
+  {
+    "id": "hongshan_zoo_family",
+    "name": "红山森林动物园亲子下午",
+    "segment": "play",
+    "category": "动物园",
+    "scenes": ["family", "solo", "friends"],
+    "location": [118.8087, 32.0877],
+    "address": "玄武区和燕路 168 号",
+    "rating": 4.8,
+    "review_count": 14800,
+    "price_per_person": 40,
+    "tags": ["动物园", "自然教育", "亲子", "户外"],
+    "open_hours": "08:30-17:00",
+    "suit_for": ["亲子", "朋友", "一个人", "自然观察"],
+    "ai_pitch": "南京高辨识度亲子目的地，动物展区和自然教育都很强；适合孩子放电，也适合一个人慢慢观察动物。",
+    "image": "place_photos/gen_hongshan_zoo_family.png",
+    "gallery": ["place_photos/gen_hongshan_zoo_family.png"],
+    "groupon": [{"id": "grp_hongshan_family", "title": "2大1小自然观察套票", "price": 118, "original": 120, "sold": 2600, "for_scene": "family"}],
+    "booking": {"type": "ticket", "label": "购买动物园入园票", "party_default": 3},
+    "queue": {"need_queue": true, "wait_min": 20, "has_table": true},
+    "tickets_left": 60,
+    "dianping_notes": [
+      {"author": "红山年卡用户", "avatar_color": "#389E0D", "likes": 820, "title": "小朋友和大人都不会无聊", "body": "场地很大，适合留半天。动物状态好，孩子能学到东西。", "images": ["place_photos/gen_hongshan_zoo_family.png"]}
+    ],
+    "reviews": [
+      {"text": "自然教育做得好，不是单纯看动物。", "useful": 120, "author": "红山年卡用户"},
+      {"text": "园区大，带娃建议穿舒服鞋。", "useful": 83, "author": "球球爸"},
+      {"text": "一个人逛也很治愈。", "useful": 50, "author": "木木"}
+    ]
+  },
+  {
+    "id": "xjk_escape_room",
+    "name": "新街口密室推理局",
+    "segment": "play",
+    "category": "密室推理",
+    "scenes": ["friends", "couple"],
+    "location": [118.7806, 32.0435],
+    "address": "秦淮区新街口商圈石鼓路 4F",
+    "rating": 4.5,
+    "review_count": 2100,
+    "price_per_person": 138,
+    "tags": ["密室", "推理", "朋友局", "室内"],
+    "open_hours": "10:30-23:30",
+    "suit_for": ["朋友", "情侣", "室内", "互动"],
+    "ai_pitch": "朋友局热场很快，不受天气影响；推理强度中等，结束后直接在新街口找饭最省事。",
+    "image": "place_photos/gen_xjk_escape_room.png",
+    "gallery": ["place_photos/gen_xjk_escape_room.png"],
+    "groupon": [{"id": "grp_escape_4", "title": "4人推理主题场", "price": 488, "original": 552, "sold": 760, "for_scene": "friends"}],
+    "booking": {"type": "ticket", "label": "预约密室主题场", "party_default": 4},
+    "queue": {"need_queue": false, "wait_min": 10, "has_table": true},
+    "tickets_left": 14,
+    "dianping_notes": [
+      {"author": "推理局老玩家", "avatar_color": "#595959", "likes": 166, "title": "朋友局开场很快热起来", "body": "线索量合适，不会太硬核。玩完走去德基吃饭很近。", "images": ["place_photos/gen_xjk_escape_room.png"]}
+    ],
+    "reviews": [
+      {"text": "适合三四个朋友一起玩。", "useful": 44, "author": "推理局老玩家"},
+      {"text": "新街口位置方便，饭前热身刚好。", "useful": 39, "author": "Lily"},
+      {"text": "胆小也能玩，剧情不吓人。", "useful": 21, "author": "小周"}
+    ]
+  },
+  {
+    "id": "hexi_pilates",
+    "name": "河西轻氧运动馆",
+    "segment": "play",
+    "category": "轻运动",
+    "scenes": ["solo", "friends"],
+    "location": [118.7358, 32.0198],
+    "address": "建邺区河西生态公园北门 2F",
+    "rating": 4.6,
+    "review_count": 860,
+    "price_per_person": 99,
+    "tags": ["普拉提", "瑜伽", "一个人", "放松"],
+    "open_hours": "09:00-21:30",
+    "suit_for": ["一个人", "朋友", "轻运动", "放松"],
+    "ai_pitch": "一个人想动一动但不想高强度时很合适，运动后接湖边轻食或散步，节奏很松。",
+    "image": "place_photos/gen_hexi_pilates.png",
+    "gallery": ["place_photos/gen_hexi_pilates.png"],
+    "groupon": [{"id": "grp_pilates_trial", "title": "单人普拉提体验课", "price": 79, "original": 128, "sold": 410, "for_scene": "solo"}],
+    "booking": {"type": "ticket", "label": "预约单人体验课", "party_default": 1},
+    "queue": {"need_queue": false, "wait_min": 0, "has_table": true},
+    "tickets_left": 11,
+    "dianping_notes": [
+      {"author": "下班松弛计划", "avatar_color": "#69C0FF", "likes": 73, "title": "一个人来上体验课很友好", "body": "老师会调整动作，课后去湖边散步特别舒服。", "images": ["place_photos/gen_hexi_pilates.png"]}
+    ],
+    "reviews": [
+      {"text": "一个人来不尴尬，老师很耐心。", "useful": 22, "author": "下班松弛计划"},
+      {"text": "河西这边停车方便，课后能散步。", "useful": 18, "author": "Echo"},
+      {"text": "强度不大，适合放松。", "useful": 12, "author": "小米"}
+    ]
+  },
+  {
+    "id": "deji_green_tea",
+    "name": "德基 Green Tea 轻食茶餐",
+    "segment": "eat",
+    "category": "轻食茶餐",
+    "scenes": ["solo", "couple", "friends"],
+    "location": [118.7824, 32.0440],
+    "address": "秦淮区中山路 18 号德基广场 7F",
+    "rating": 4.7,
+    "review_count": 3600,
+    "price_per_person": 86,
+    "tags": ["新街口", "清淡", "茶饮", "安静"],
+    "open_hours": "10:00-22:00",
+    "suit_for": ["一个人", "情侣", "朋友", "清淡", "安静"],
+    "ai_pitch": "新街口核心商场里少有的清淡安静选项，一个人坐下吃饭不突兀，也方便从德基展览或总统府一带接过来。",
+    "image": "place_photos/gen_deji_green_tea.png",
+    "gallery": ["place_photos/gen_deji_green_tea.png", "place_photos/gen_lianhu_light_snack.png"],
+    "groupon": [
+      {"id": "grp_green_solo", "title": "单人轻食茶饮套餐", "price": 68, "original": 86, "sold": 1200, "for_scene": "solo"},
+      {"id": "grp_green_pair", "title": "双人清爽茶餐", "price": 138, "original": 172, "sold": 980, "for_scene": "couple"}
+    ],
+    "booking": {"type": "table", "label": "预约靠窗安静位", "party_default": 1},
+    "queue": {"need_queue": true, "wait_min": 8, "has_table": true},
+    "tickets_left": null,
+    "dianping_notes": [
+      {"author": "新街口独处人", "avatar_color": "#13C2C2", "likes": 246, "title": "一个人吃饭不尴尬的德基轻食", "body": "座位间距舒服，茶饮和热食都偏清淡，下午一个人坐会儿刚好。", "images": ["place_photos/gen_deji_green_tea.png"]},
+      {"author": "控糖打工人", "avatar_color": "#52C41A", "likes": 118, "title": "比商场重口餐厅更稳", "body": "周末饭点也能预约，清淡但不是只有沙拉，适合不想吃太撑的时候。", "images": ["place_photos/gen_lianhu_light_snack.png"]}
+    ],
+    "reviews": [
+      {"text": "一个人坐下吃很舒服，服务不会催。", "useful": 66, "author": "新街口独处人"},
+      {"text": "口味清淡，茶饮比预期好。", "useful": 44, "author": "控糖打工人"},
+      {"text": "德基楼上动线方便，逛完展直接来。", "useful": 39, "author": "阿晴"}
+    ]
+  },
+  {
+    "id": "xjk_lotus_light",
+    "name": "莲湖糕团店 · 清淡小食",
+    "segment": "eat",
+    "category": "南京小吃",
+    "scenes": ["solo", "friends", "family"],
+    "location": [118.7865, 32.0267],
+    "address": "秦淮区贡院西街莲湖小吃街",
+    "rating": 4.5,
+    "review_count": 6800,
+    "price_per_person": 32,
+    "tags": ["糕团", "清淡", "老南京", "小吃"],
+    "open_hours": "07:30-20:30",
+    "suit_for": ["一个人", "朋友", "亲子", "清淡", "小吃"],
+    "ai_pitch": "想吃得轻一点又有南京味时很合适，赤豆元宵和糕团不撑；一个人从夫子庙或新街口过来也方便。",
+    "image": "place_photos/gen_lianhu_light_snack.png",
+    "gallery": ["place_photos/gen_lianhu_light_snack.png"],
+    "groupon": [{"id": "grp_lotus_snack", "title": "老南京糕团小食双拼", "price": 29, "original": 42, "sold": 3100, "for_scene": "solo"}],
+    "booking": {"type": "table", "label": "预留小桌", "party_default": 1},
+    "queue": {"need_queue": true, "wait_min": 14, "has_table": true},
+    "tickets_left": null,
+    "dianping_notes": [
+      {"author": "秦淮甜口", "avatar_color": "#FA8C16", "likes": 376, "title": "清淡小吃也能吃出南京味", "body": "赤豆元宵、糕团都很稳，一个人来吃很快，不会有大餐压力。", "images": ["place_photos/gen_lianhu_light_snack.png"]}
+    ],
+    "reviews": [
+      {"text": "赤豆元宵温热清淡，适合不想吃重口。", "useful": 80, "author": "秦淮甜口"},
+      {"text": "游客多但翻台快。", "useful": 51, "author": "阿宁"},
+      {"text": "带孩子也能吃，小份选择多。", "useful": 28, "author": "圆圆妈"}
+    ]
+  },
+  {
+    "id": "deji_thai_bistro",
+    "name": "德基泰式小馆",
+    "segment": "eat",
+    "category": "东南亚菜",
+    "scenes": ["friends", "couple", "solo"],
+    "location": [118.7821, 32.0442],
+    "address": "秦淮区德基广场二期 6F",
+    "rating": 4.6,
+    "review_count": 2200,
+    "price_per_person": 118,
+    "tags": ["新街口", "朋友聚餐", "约会", "酸辣"],
+    "open_hours": "11:00-22:00",
+    "suit_for": ["朋友", "情侣", "一个人", "商场"],
+    "ai_pitch": "新街口朋友聚餐的稳妥商场店，菜品分享感强，约会也不太正式；如果用户想清淡，它会排在 Green Tea 后面。",
+    "image": "place_photos/gen_deji_thai_bistro.png",
+    "gallery": ["place_photos/gen_deji_thai_bistro.png"],
+    "groupon": [{"id": "grp_thai_4", "title": "4人泰式分享餐", "price": 398, "original": 472, "sold": 760, "for_scene": "friends"}],
+    "booking": {"type": "table", "label": "预约 4 人桌", "party_default": 4},
+    "queue": {"need_queue": true, "wait_min": 18, "has_table": true},
+    "tickets_left": null,
+    "dianping_notes": [
+      {"author": "冬阴功续命", "avatar_color": "#F759AB", "likes": 144, "title": "朋友聚餐比轻食更有气氛", "body": "酸辣口很开胃，菜适合分享。逛完德基展直接吃很顺。", "images": ["place_photos/gen_deji_thai_bistro.png"]}
+    ],
+    "reviews": [
+      {"text": "朋友局点一桌很热闹。", "useful": 33, "author": "冬阴功续命"},
+      {"text": "商场店预约比较稳。", "useful": 29, "author": "Ariel"},
+      {"text": "口味偏酸辣，清淡需求要慎选。", "useful": 18, "author": "小许"}
+    ]
+  },
+  {
+    "id": "hexi_huaiyang_family",
+    "name": "河西小厨娘淮扬菜",
+    "segment": "eat",
+    "category": "淮扬菜",
+    "scenes": ["family", "friends", "couple"],
+    "location": [118.7369, 32.0150],
+    "address": "建邺区金陵天地 5F",
+    "rating": 4.7,
+    "review_count": 2950,
+    "price_per_person": 126,
+    "tags": ["家庭聚餐", "淮扬菜", "儿童椅", "包间"],
+    "open_hours": "11:00-21:30",
+    "suit_for": ["亲子", "朋友", "情侣", "品质晚饭"],
+    "ai_pitch": "家庭晚饭比火锅更稳：有儿童椅、出餐稳定、淮扬菜口味温和，适合玩累后一家人坐下来吃顿好的。",
+    "image": "place_photos/gen_hexi_huaiyang_family.png",
+    "gallery": ["place_photos/gen_hexi_huaiyang_family.png"],
+    "groupon": [{"id": "grp_huaiyang_family", "title": "3-4人淮扬家宴", "price": 398, "original": 468, "sold": 880, "for_scene": "family"}],
+    "booking": {"type": "table", "label": "预约家庭圆桌", "party_default": 3},
+    "queue": {"need_queue": true, "wait_min": 12, "has_table": true},
+    "tickets_left": null,
+    "dianping_notes": [
+      {"author": "娃吃饭优先", "avatar_color": "#FAAD14", "likes": 156, "title": "带娃吃饭比排火锅省心", "body": "菜口味温和，有儿童椅，服务员会主动拿宝宝餐具。", "images": ["place_photos/gen_hexi_huaiyang_family.png"]}
+    ],
+    "reviews": [
+      {"text": "带娃友好，圆桌坐起来舒服。", "useful": 42, "author": "娃吃饭优先"},
+      {"text": "狮子头和清蒸鱼都稳。", "useful": 37, "author": "建邺居民"},
+      {"text": "比热门火锅等待短。", "useful": 25, "author": "团子妈"}
+    ]
+  },
+  {
+    "id": "laomendong_dapaidang",
+    "name": "老门东南京大牌档",
+    "segment": "eat",
+    "category": "南京菜",
+    "scenes": ["friends", "family", "couple"],
+    "location": [118.7861, 32.0151],
+    "address": "秦淮区老门东历史街区边营 32 号",
+    "rating": 4.6,
+    "review_count": 12600,
+    "price_per_person": 92,
+    "tags": ["老南京", "盐水鸭", "朋友聚餐", "游客友好"],
+    "open_hours": "10:30-21:30",
+    "suit_for": ["朋友", "亲子", "情侣", "南京菜"],
+    "ai_pitch": "想把南京味吃完整时很合适，盐水鸭、鸭血粉丝、糖芋苗都能点；朋友或外地人同行时比普通商场餐更有记忆点。",
+    "image": "place_photos/gen_laomendong_dapaidang.png",
+    "gallery": ["place_photos/gen_laomendong_dapaidang.png"],
+    "groupon": [{"id": "grp_dapaidang_4", "title": "4人金陵经典菜套餐", "price": 328, "original": 396, "sold": 4200, "for_scene": "friends"}],
+    "booking": {"type": "table", "label": "取号老南京圆桌", "party_default": 4},
+    "queue": {"need_queue": true, "wait_min": 28, "has_table": true},
+    "tickets_left": null,
+    "dianping_notes": [
+      {"author": "金陵饭搭子", "avatar_color": "#A8071A", "likes": 566, "title": "带外地朋友吃南京味不踩雷", "body": "菜名和环境都很南京，适合朋友局。饭后直接逛老门东。", "images": ["place_photos/gen_laomendong_dapaidang.png"]}
+    ],
+    "reviews": [
+      {"text": "南京菜选择全，适合朋友分享。", "useful": 91, "author": "金陵饭搭子"},
+      {"text": "饭点会排队，最好提前取号。", "useful": 74, "author": "Nora"},
+      {"text": "饭后逛老门东动线很好。", "useful": 56, "author": "阿杰"}
+    ]
+  },
+  {
+    "id": "qinhuai_teahouse",
+    "name": "秦淮茶馆评弹小坐",
+    "segment": "extra",
+    "category": "茶馆",
+    "scenes": ["friends", "couple", "solo"],
+    "location": [118.7884, 32.0221],
+    "address": "秦淮区夫子庙秦淮河畔 2F",
+    "rating": 4.6,
+    "review_count": 1680,
+    "price_per_person": 68,
+    "tags": ["茶馆", "评弹", "秦淮河", "安静"],
+    "open_hours": "13:00-22:30",
+    "suit_for": ["朋友", "情侣", "一个人", "坐一会儿"],
+    "ai_pitch": "饭后不想再跑强项目，可以在秦淮河边喝茶听一小段评弹；适合聊天，也适合一个人坐着收尾。",
+    "image": "place_photos/gen_qinhuai_teahouse.png",
+    "gallery": ["place_photos/gen_qinhuai_teahouse.png"],
+    "groupon": [{"id": "grp_teahouse_pair", "title": "双人茶点评弹席", "price": 128, "original": 156, "sold": 520, "for_scene": "couple"}],
+    "booking": {"type": "table", "label": "预约临窗茶座", "party_default": 2},
+    "queue": {"need_queue": false, "wait_min": 5, "has_table": true},
+    "tickets_left": null,
+    "dianping_notes": [
+      {"author": "秦淮夜茶", "avatar_color": "#AD6800", "likes": 132, "title": "饭后坐一会儿比继续暴走舒服", "body": "茶点不重，临窗位置能看河。朋友聊天或约会收尾都自然。", "images": ["place_photos/gen_qinhuai_teahouse.png"]}
+    ],
+    "reviews": [
+      {"text": "临窗茶座很放松。", "useful": 31, "author": "秦淮夜茶"},
+      {"text": "评弹声音不吵，适合聊天。", "useful": 27, "author": "苏苏"},
+      {"text": "一个人坐半小时也很舒服。", "useful": 19, "author": "Ming"}
+    ]
+  },
+  {
+    "id": "yuzui_sunset_walk",
+    "name": "鱼嘴湿地落日散步",
+    "segment": "extra",
+    "category": "湿地散步",
+    "scenes": ["couple", "friends", "solo", "family"],
+    "location": [118.6995, 31.9951],
+    "address": "建邺区扬子江大道鱼嘴湿地公园",
+    "rating": 4.7,
+    "review_count": 5400,
+    "price_per_person": 0,
+    "tags": ["落日", "湿地", "江景", "免费"],
+    "open_hours": "全天",
+    "suit_for": ["情侣", "朋友", "一个人", "亲子", "散步"],
+    "ai_pitch": "河西收尾很稳的免费落日点，饭后散步、约会拍照或一个人放空都合适；不需要复杂预约。",
+    "image": "place_photos/gen_yuzui_sunset_walk.png",
+    "gallery": ["place_photos/gen_yuzui_sunset_walk.png", "place_photos/hexi_eco_lake.jpg"],
+    "groupon": [],
+    "booking": {"type": "none", "label": "免费开放，到场即走"},
+    "queue": {"need_queue": false, "wait_min": 0, "has_table": true},
+    "tickets_left": null,
+    "dianping_notes": [
+      {"author": "追落日的人", "avatar_color": "#FA8C16", "likes": 258, "title": "河西饭后看落日的答案", "body": "视野开阔，江风很舒服。适合把行程轻轻收住，不用再花钱。", "images": ["place_photos/gen_yuzui_sunset_walk.png"]}
+    ],
+    "reviews": [
+      {"text": "落日很美，免费且开阔。", "useful": 70, "author": "追落日的人"},
+      {"text": "适合饭后散步，但风大要带外套。", "useful": 44, "author": "小顾"},
+      {"text": "约会拍照比商场更有松弛感。", "useful": 35, "author": "Ann"}
+    ]
+  },
+  {
+    "id": "pioneer_bookstore",
+    "name": "先锋书店五台山店",
+    "segment": "extra",
+    "category": "书店咖啡",
+    "scenes": ["solo", "couple", "friends"],
+    "location": [118.7692, 32.0508],
+    "address": "鼓楼区广州路 173 号五台山体育馆地下",
+    "rating": 4.8,
+    "review_count": 8200,
+    "price_per_person": 45,
+    "tags": ["书店", "咖啡", "安静", "文化地标"],
+    "open_hours": "10:00-21:00",
+    "suit_for": ["一个人", "情侣", "朋友", "阅读", "安静"],
+    "ai_pitch": "南京文化地标型书店，一个人收尾很舒服，约会也不会太用力；适合饭后留一段安静缓冲。",
+    "image": "place_photos/gen_pioneer_bookstore.png",
+    "gallery": ["place_photos/gen_pioneer_bookstore.png"],
+    "groupon": [{"id": "grp_pioneer_coffee", "title": "单人咖啡阅读券", "price": 39, "original": 48, "sold": 600, "for_scene": "solo"}],
+    "booking": {"type": "table", "label": "预约咖啡阅读座", "party_default": 1},
+    "queue": {"need_queue": false, "wait_min": 8, "has_table": true},
+    "tickets_left": null,
+    "dianping_notes": [
+      {"author": "地下书架", "avatar_color": "#8C8C8C", "likes": 340, "title": "一个人收尾的安全地点", "body": "能看书、能喝咖啡，不会被打扰。吃完饭来这里坐一会儿很合适。", "images": ["place_photos/gen_pioneer_bookstore.png"]}
+    ],
+    "reviews": [
+      {"text": "一个人来最舒服，能待很久。", "useful": 88, "author": "地下书架"},
+      {"text": "文化地标，朋友也能顺路打卡。", "useful": 62, "author": "阿白"},
+      {"text": "咖啡座位有限，周末下午略满。", "useful": 36, "author": "Reader"}
+    ]
+  },
+  {
+    "id": "laomendong_florist",
+    "name": "花迹小铺 · 老门东花束",
+    "segment": "extra",
+    "category": "鲜花外卖",
+    "scenes": ["couple", "friends"],
+    "location": [118.7863, 32.0154],
+    "address": "秦淮区老门东三条营花艺小铺",
+    "rating": 4.7,
+    "review_count": 520,
+    "price_per_person": 119,
+    "tags": ["鲜花", "老门东", "送到餐厅", "约会"],
+    "open_hours": "09:30-22:00",
+    "suit_for": ["情侣", "惊喜", "朋友生日"],
+    "ai_pitch": "老门东晚餐后想加一点仪式感，可以下单花束送到茶馆或餐厅；比硬塞一个景点更轻。",
+    "image": "place_photos/gen_laomendong_florist.png",
+    "gallery": ["place_photos/gen_laomendong_florist.png"],
+    "groupon": [{"id": "grp_lmd_florist", "title": "季节混色花束含贺卡", "price": 119, "original": 158, "sold": 380, "for_scene": "couple"}],
+    "booking": {"type": "delivery", "label": "下单花束，送到餐厅或茶馆", "party_default": 1},
+    "queue": {"need_queue": false, "wait_min": 0, "has_table": true},
+    "tickets_left": null,
+    "dianping_notes": [
+      {"author": "老门东约会", "avatar_color": "#EB2F96", "likes": 95, "title": "花送到茶馆那一刻很自然", "body": "不用拿着花逛一整路，坐下时送到更惊喜。包装干净，配送准。", "images": ["place_photos/gen_laomendong_florist.png"]}
+    ],
+    "reviews": [
+      {"text": "送到餐厅很准时。", "useful": 24, "author": "老门东约会"},
+      {"text": "花材新鲜，贺卡字也好看。", "useful": 19, "author": "kiki"},
+      {"text": "适合临时补一个小惊喜。", "useful": 14, "author": "阿晨"}
+    ]
+  }
+]

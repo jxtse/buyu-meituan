@@ -23,6 +23,7 @@ from pathlib import Path
 from typing import Any
 
 DATA_PATH = Path(__file__).parent / "data" / "merchants.json"
+REPRESENTATIVE_DATA_PATH = Path(__file__).parent / "data" / "representative_merchants.json"
 
 # 故障注入开关：现场 demo 触发「无座 / 无票 / 冲突」自动调整用
 _FAULTS: set[str] = set()
@@ -63,6 +64,9 @@ class MeituanMock:
         path = Path(data_path) if data_path else DATA_PATH
         with path.open("r", encoding="utf-8") as f:
             data = json.load(f)
+        if path == DATA_PATH and REPRESENTATIVE_DATA_PATH.exists():
+            with REPRESENTATIVE_DATA_PATH.open("r", encoding="utf-8") as f:
+                data.extend(json.load(f))
         self._items: list[dict[str, Any]] = data
         self._by_id = {str(m["id"]): m for m in data}
         self.bus = bus
@@ -88,13 +92,17 @@ class MeituanMock:
     def search_merchants(
         self, *, segment: str, scene: str | None = None,
         exclude: set[str] | None = None, near: tuple[float, float] | None = None,
+        query: str | None = None,
+        preferences: list[str] | None = None,
         limit: int = 6,
     ) -> list[dict[str, Any]]:
-        """按 段(play/eat/extra) + 场景(family/couple/friends) 召回候选，按距离排序。"""
+        """按段、场景、自然语言 query 与偏好召回候选。"""
         self._emit_call("dianping_search", {
-            "segment": segment, "scene": scene, "exclude": sorted(exclude or [])})
+            "segment": segment, "scene": scene, "query": query,
+            "preferences": preferences or [], "exclude": sorted(exclude or [])})
         exclude = exclude or set()
-        center = near or self.home_location()
+        signals = _query_signals(query, preferences)
+        center = near or _preferred_center(signals) or self.home_location()
         out: list[dict[str, Any]] = []
         for m in self._items:
             if m.get("segment") != segment:
@@ -104,9 +112,11 @@ class MeituanMock:
             if scene and scene not in (m.get("scenes") or []):
                 continue
             brief = self._brief(m, center)
+            score, reasons = _match_score(m, brief["distance_km"], signals, scene)
+            brief["match_score"] = score
+            brief["match_reasons"] = reasons
             out.append(brief)
-        # 距离近 + 评分高优先
-        out.sort(key=lambda x: (x["distance_km"], -x["rating"]))
+        out.sort(key=lambda x: (-x["match_score"], x["distance_km"], -x["rating"]))
         result = out[:limit]
         self._emit_result("dianping_search", {"count": len(result),
                                               "ids": [r["id"] for r in result]})
@@ -127,7 +137,7 @@ class MeituanMock:
             "review_count": m["review_count"], "price_per_person": m["price_per_person"],
             "tags": m.get("tags", []), "open_hours": m.get("open_hours"),
             "distance_km": dist, "image": self._image_ref(m),
-            "gallery": [self._image_ref(m)],
+            "gallery": self._gallery_refs(m),
             "ai_pitch": m.get("ai_pitch", ""),
             "groupon": m.get("groupon", []),
             "booking": m.get("booking", {}),
@@ -142,6 +152,38 @@ class MeituanMock:
 
     def dianping_notes(self, poi_id: str) -> list[dict]:
         return self.get(poi_id).get("dianping_notes", [])
+
+    def query_queue(self, poi_id: str, *, party_size: int | None = None) -> dict:
+        """模拟美团排队/可订桌查询，返回 Agent 可直接决策的状态。"""
+        self._emit_call("meituan_query_queue", {"poi_id": poi_id, "party_size": party_size})
+        m = self.get(poi_id)
+        queue = m.get("queue", {})
+        wait_min = int(queue.get("wait_min") or 0)
+        has_table = bool(queue.get("has_table", True))
+        if not has_table:
+            status = "no_table"
+            action = "switch_candidate"
+        elif wait_min >= 30:
+            status = "long_wait"
+            action = "switch_candidate"
+        elif m.get("booking", {}).get("type") == "table":
+            status = "available"
+            action = "book_table"
+        else:
+            status = "available"
+            action = "continue"
+        result = {
+            "status": status,
+            "poi_id": poi_id,
+            "name": m["name"],
+            "party_size": party_size,
+            "need_queue": bool(queue.get("need_queue")),
+            "wait_min": wait_min,
+            "has_table": has_table,
+            "recommended_action": action,
+        }
+        self._emit_result("meituan_query_queue", result)
+        return result
 
     # ---------------- 预约 / 下单（带故障注入）----------------
     def _fault_active(self, kind: str, poi_id: str) -> bool:
@@ -249,6 +291,18 @@ class MeituanMock:
             return f"/static/{image}"
         return f"/api/place-image/{m['id']}?v=20260601-photo1"
 
+    @classmethod
+    def _gallery_refs(cls, m: dict) -> list[str]:
+        raw = list(m.get("gallery") or [])
+        if m.get("image") and m["image"] not in raw:
+            raw.insert(0, m["image"])
+        refs: list[str] = []
+        for image in raw:
+            ref = cls._image_ref({**m, "image": image})
+            if ref not in refs:
+                refs.append(ref)
+        return refs or [cls._image_ref(m)]
+
     def _emit_call(self, name: str, args: dict) -> None:
         self._publish({"type": "tool_call", "source": "meituan_mock",
                        "name": name, "args": args})
@@ -271,3 +325,93 @@ def _truncate(obj: Any, limit: int = 400) -> Any:
     if len(s) <= limit:
         return obj
     return {"_summary": s[:limit] + "…"}
+
+
+AREA_CENTERS: dict[str, tuple[float, float]] = {
+    "金陵天地": (118.7372, 32.0148),
+    "河西": (118.7372, 32.0148),
+    "新街口": (118.7824, 32.0440),
+    "德基": (118.7824, 32.0440),
+    "夫子庙": (118.7880, 32.0220),
+    "老门东": (118.7860, 32.0150),
+    "玄武湖": (118.7920, 32.0760),
+    "总统府": (118.7926, 32.0441),
+    "南京博物院": (118.8302, 32.0416),
+    "南博": (118.8302, 32.0416),
+    "鱼嘴": (118.6995, 31.9951),
+}
+
+
+KEYWORD_ALIASES: dict[str, tuple[str, ...]] = {
+    "清淡": ("清淡", "轻食", "低脂", "减脂", "不油"),
+    "安静": ("安静", "清静", "不吵", "坐一会", "坐会"),
+    "一个人": ("一个人", "一人", "独自", "自己", "solo"),
+    "朋友": ("朋友", "同事", "三四个", "多人"),
+    "亲子": ("亲子", "孩子", "娃", "家庭", "带娃"),
+    "约会": ("约会", "情侣", "对象", "女朋友", "男朋友", "老婆", "老公"),
+    "散步": ("散步", "走走", "citywalk", "Citywalk"),
+    "拍照": ("拍照", "出片", "打卡"),
+    "南京菜": ("南京菜", "老南京", "盐水鸭", "鸭血粉丝"),
+}
+
+
+def _query_signals(query: str | None, preferences: list[str] | None) -> set[str]:
+    text = " ".join([query or "", " ".join(preferences or [])])
+    signals: set[str] = set()
+    for area in AREA_CENTERS:
+        if area in text:
+            signals.add(area)
+    for signal, aliases in KEYWORD_ALIASES.items():
+        if any(alias in text for alias in aliases):
+            signals.add(signal)
+    for pref in preferences or []:
+        if pref:
+            signals.add(pref)
+    return signals
+
+
+def _preferred_center(signals: set[str]) -> tuple[float, float] | None:
+    for area, center in AREA_CENTERS.items():
+        if area in signals:
+            return center
+    return None
+
+
+def _match_score(
+    merchant: dict[str, Any],
+    distance_km: float,
+    signals: set[str],
+    scene: str | None,
+) -> tuple[float, list[str]]:
+    haystack = " ".join([
+        merchant.get("name", ""),
+        merchant.get("category", ""),
+        merchant.get("address", ""),
+        " ".join(merchant.get("tags") or []),
+        " ".join(merchant.get("suit_for") or []),
+        merchant.get("ai_pitch", ""),
+    ]).lower()
+    score = float(merchant.get("rating", 0)) * 10 - distance_km * 1.5
+    reasons: list[str] = []
+    if scene and scene in (merchant.get("scenes") or []):
+        score += 10
+        reasons.append(scene)
+    for signal in signals:
+        aliases = KEYWORD_ALIASES.get(signal, (signal,))
+        if signal in AREA_CENTERS:
+            aliases = (signal,)
+        if any(alias.lower() in haystack for alias in aliases):
+            score += 12 if signal in AREA_CENTERS else 8
+            reasons.append(signal)
+    if "哪里都行" in signals or "不限区域" in signals:
+        reasons.append("不限区域")
+    if merchant.get("queue", {}).get("has_table") is False:
+        score -= 20
+    wait = merchant.get("queue", {}).get("wait_min")
+    if isinstance(wait, int):
+        score -= max(wait - 10, 0) * 0.25
+        if wait <= 10:
+            reasons.append("等待短")
+    if merchant.get("tickets_left") == 0:
+        score -= 30
+    return score, sorted(set(reasons))

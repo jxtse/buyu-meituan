@@ -1,10 +1,8 @@
-import json
-from pathlib import Path
+from app.mock.meituan import MeituanMock
 
 
 def _merchants() -> list[dict]:
-    path = Path(__file__).resolve().parents[1] / "app/mock/data/merchants.json"
-    return json.loads(path.read_text(encoding="utf-8"))
+    return MeituanMock()._items
 
 
 def test_chinese_place_names_do_not_mix_city_walk_suffix():
