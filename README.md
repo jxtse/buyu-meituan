@@ -5,7 +5,7 @@
 步语 BuYu 面向「周末半天不知道去哪儿」这一高频本地生活场景，把一句含糊需求转化为一条 **可确认、可解释、可执行** 的本地生活方案。系统不是只生成推荐文案，而是把 LLM 放在规划中枢：在真实商户候选、实时可用性与用户反馈之间持续权衡，并把推荐、确认与执行连成闭环。
 
 - 项目设计文档：[步语 BuYu · 美团 AI Hackathon 设计文档](https://jxtse.github.io/projects/meituan-ai-hackathon/)
-- 在线交互 Demo：[https://dan-newest-grant-headlines.trycloudflare.com/](https://dan-newest-grant-headlines.trycloudflare.com/)
+- 在线交互 Demo：[https://backing-cell-rentals-certainly.trycloudflare.com/](https://backing-cell-rentals-certainly.trycloudflare.com/)
 
 ## 评审说明
 
