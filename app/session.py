@@ -1309,7 +1309,15 @@ class Session:
     def switch_to(self, poi_id: str) -> dict[str, Any]:
         """用户在详情二级菜单里手动改选同段的另一家。"""
         seg = self.segments[self.idx]
-        poi = self.mock._brief(self.mock.get(poi_id), self.mock.home_location())
+        poi = next((c for c in self.mock.search_merchants(
+            segment=seg.kind,
+            scene=self.constraints.get("scene"),
+            query=self._search_query(),
+            preferences=self.constraints.get("preferences") or [],
+            limit=20,
+        ) if c.get("id") == poi_id), None)
+        if poi is None:
+            poi = self.mock._brief(self.mock.get(poi_id), self.mock.home_location())
         top = self._select_groupon(poi) or {}
         seg.current = Recommendation(
             segment_kind=seg.kind, segment_intent=seg.intent, poi=poi,
@@ -1362,6 +1370,13 @@ class Session:
             prefs.update(new_prefs)
             self.constraints["preferences"] = sorted(prefs)
 
+        if action != "switch":
+            explicit = self._explicit_preference_switch(message, candidates, cur.get("id"))
+            if explicit:
+                action = "switch"
+                data["switch_to_id"] = explicit["id"]
+                reply = f"明白，你更想吃{explicit['reason']}。我直接帮你换到「{explicit['name']}」，不用你自己进详情挑。"
+
         card = None
         if action == "switch" and data.get("switch_to_id"):
             res = self.switch_to(data["switch_to_id"])
@@ -1371,6 +1386,32 @@ class Session:
         self._emit({"type": "assistant_reply", "text": reply})
         return {"reply": reply, "action": action, "card": card,
                 "current_index": self.idx, "done": False}
+
+    @staticmethod
+    def _explicit_preference_switch(
+        message: str,
+        candidates: list[dict[str, Any]],
+        current_id: str | None,
+    ) -> dict[str, Any] | None:
+        signals = {
+            "南京菜": ("南京菜", "老南京", "盐水鸭", "鸭血粉丝"),
+            "清淡": ("清淡", "轻食", "低脂", "减脂"),
+            "安静": ("安静", "清静", "不吵", "坐一会", "坐会"),
+        }
+        wanted = [name for name, keys in signals.items() if any(k in message for k in keys)]
+        if not wanted:
+            return None
+        current = next((c for c in candidates if c.get("id") == current_id), None)
+        current_reasons = set((current or {}).get("match_reasons") or [])
+        for signal in wanted:
+            if signal in current_reasons:
+                continue
+            match = next((c for c in candidates
+                          if c.get("id") != current_id
+                          and signal in (c.get("match_reasons") or [])), None)
+            if match:
+                return {**match, "reason": signal}
+        return None
 
     def detail(self, poi_id: str) -> dict[str, Any]:
         poi = self.mock.get(poi_id)

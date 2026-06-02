@@ -40,6 +40,32 @@ class SoloEatLLM:
         }, None
 
 
+class KeepAfterSoloEatLLM:
+    def __init__(self):
+        self.calls = 0
+
+    def chat_json(self, *, system, user, model=None, retries=0):
+        self.calls += 1
+        if self.calls == 1:
+            return {
+                "scene": "solo",
+                "adults": 1,
+                "kids": 0,
+                "kid_age": None,
+                "diet": ["清淡"],
+                "time_window": {"start": "14:00", "hours": 3},
+                "budget_level": "medium",
+                "preferences": ["一个人", "新街口", "清淡", "安静", "坐一会儿"],
+                "summary": "一个人在新街口附近吃清淡一点，并找个安静地方坐一会儿。",
+            }, None
+        return {
+            "reply": "我先按当前推荐给你保留着，你也可以点详情自己挑。",
+            "action": "keep",
+            "switch_to_id": None,
+            "updated_preferences": ["南京菜"],
+        }, None
+
+
 class CollectingBus:
     def __init__(self):
         self.events = []
@@ -99,6 +125,21 @@ def test_custom_food_only_query_starts_with_eat_segment_and_xinjiekou_match():
     assert result["card"]["poi"]["id"] == "deji_green_tea"
     assert "新街口" in result["card"]["poi"]["match_reasons"]
     assert "清淡" in result["card"]["poi"]["match_reasons"]
+
+
+def test_chat_new_cuisine_preference_switches_current_card_without_manual_pick():
+    bus = CollectingBus()
+    llm = KeepAfterSoloEatLLM()
+    session = Session(llm=llm, mock=MeituanMock(bus=bus), bus=bus)
+    first = session.start("一个人，现在去，新街口附近，想吃清淡一点，也想安静坐一会儿", source="custom")
+
+    result = session.chat("我喜欢吃南京菜")
+
+    assert first["card"]["poi"]["id"] == "deji_green_tea"
+    assert result["action"] == "switch"
+    assert result["card"]["poi"]["id"] == "xjk_lotus_light"
+    assert "南京菜" in result["card"]["poi"]["match_reasons"]
+    assert "南京菜" in session.constraints["preferences"]
 
 
 def test_custom_start_greeting_asks_for_needs_without_recommending_card():
