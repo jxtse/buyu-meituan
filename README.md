@@ -7,6 +7,26 @@
 - 项目设计文档：[步语 BuYu · 美团 AI Hackathon 设计文档](https://jxtse.github.io/projects/meituan-ai-hackathon/)
 - 在线交互 Demo：[https://dan-newest-grant-headlines.trycloudflare.com/](https://dan-newest-grant-headlines.trycloudflare.com/)
 
+## 评审说明：请用输入框测试真实 Agent
+
+首页上方 4 个大按钮是 **预设演示场景**，用于让评委快速看到稳定的推荐卡片和右侧 Agent 链路回放。它们走固定 mock-only 演示路径，首卡出现更快，适合快速了解产品形态。
+
+如果要评审真正的 Agent 能力，请直接使用底部输入框输入自定义 query。自定义输入会触发真实 LLM API 调用：Agent 会先理解和追问用户需求，再调用 `dianping_search`、`dianping_detail`、`meituan_query_queue` 等 mock 工具，在工具返回的真实候选中思考、排序、换店，并在用户确认后调用 `meituan_book_table` / `meituan_buy_ticket` / `meituan_order_delivery` 完成 mock 取号、购票或下单。
+
+推荐测试 query：
+
+```text
+一个人，现在去，新街口附近，想吃清淡一点，也想安静坐一会儿
+```
+
+在推荐卡出现后，可以继续输入：
+
+```text
+我喜欢吃南京菜
+```
+
+Agent 应主动基于新增偏好重新选择更合适的南京菜候选，而不是只让用户自己去详情页挑选。
+
 ## 核心能力
 
 ### 1. 渐进式 Planning
@@ -134,16 +154,7 @@ uv run pytest -q
 当前提交验证结果：
 
 ```text
-当前提交验证结果：
-
-```text
-51 passed
-```
+52 passed
 ```
 
-## 评审说明
-
-- 首页 4 个预设场景使用稳定 mock-only 路径，保证首卡快速出现，右侧 Agent 链路同步回放。
-- 用户在输入框自由输入时才调用真实 LLM API。
-- 自定义 query 会进入 intake Agent，先通过选择卡和对话补齐需求，再进入工具检索和弹卡。
-- 所有交易动作均为 mock，不会产生真实订单。
+所有交易动作均为 mock，不会产生真实订单。
