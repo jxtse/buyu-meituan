@@ -7,7 +7,7 @@
 - 项目设计文档：[步语 BuYu · 美团 AI Hackathon 设计文档](https://jxtse.github.io/projects/meituan-ai-hackathon/)
 - 在线交互 Demo：[https://dan-newest-grant-headlines.trycloudflare.com/](https://dan-newest-grant-headlines.trycloudflare.com/)
 
-## 评审说明：请用输入框测试真实 Agent
+## 评审说明
 
 首页上方 4 个大按钮是 **预设演示场景**，用于让评委快速看到稳定的推荐卡片和右侧 Agent 链路回放。它们走固定 mock-only 演示路径，首卡出现更快，适合快速了解产品形态。
 
