@@ -5,7 +5,7 @@
 本地引力面向「周末半天不知道去哪儿」这一高频本地生活场景，把一句含糊需求转化为一条 **可确认、可解释、可执行** 的本地生活方案。系统不是只生成推荐文案，而是把 LLM 放在规划中枢：在真实商户候选、实时可用性与用户反馈之间持续权衡，并把推荐、确认与执行连成闭环。
 
 - 项目设计文档：[本地引力 · 美团 AI Hackathon 设计文档](https://jxtse.github.io/projects/meituan-ai-hackathon/)
-- 在线交互 Demo：部署到 Vercel 后填写生产 URL，不再依赖本机 `trycloudflare` 临时隧道。
+- 在线交互 Demo：[https://buyu-two.vercel.app/](https://buyu-two.vercel.app/)
 
 ## 评审说明
 
