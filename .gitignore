@@ -9,6 +9,7 @@
 __pycache__/
 *.py[cod]
 .pytest_cache/
+.uv-cache/
 .mypy_cache/
 .ruff_cache/
 

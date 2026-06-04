@@ -17,14 +17,19 @@ from typing import Any
 
 import httpx
 
-DEFAULT_BASE_URL = "http://100.99.139.20:18141"
-DEFAULT_MODEL = "gpt-5.5"
+DEFAULT_BASE_URL = "https://api.moonshot.cn"
+DEFAULT_MODEL = "kimi-k2.6"
 
 _RESPONSES_API_PREFIXES = ("gpt-5.5", "gpt-5.4-mini", "gpt-5.6")
+_OMIT_TEMPERATURE_PREFIXES = ("kimi-",)
 
 
 def _uses_responses_api(model: str) -> bool:
     return any(model.startswith(p) for p in _RESPONSES_API_PREFIXES)
+
+
+def _omits_temperature(model: str) -> bool:
+    return any(model.startswith(p) for p in _OMIT_TEMPERATURE_PREFIXES)
 
 
 @dataclass(frozen=True)
@@ -92,9 +97,10 @@ class LLMClient:
         body: dict[str, Any] = {
             "model": model,
             "messages": messages,
-            "temperature": 0,
             "max_tokens": 1600,
         }
+        if not _omits_temperature(model):
+            body["temperature"] = 0
         if tools:
             body["tools"] = tools
             body["tool_choice"] = "auto"

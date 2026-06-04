@@ -5,7 +5,7 @@
 步语 BuYu 面向「周末半天不知道去哪儿」这一高频本地生活场景，把一句含糊需求转化为一条 **可确认、可解释、可执行** 的本地生活方案。系统不是只生成推荐文案，而是把 LLM 放在规划中枢：在真实商户候选、实时可用性与用户反馈之间持续权衡，并把推荐、确认与执行连成闭环。
 
 - 项目设计文档：[步语 BuYu · 美团 AI Hackathon 设计文档](https://jxtse.github.io/projects/meituan-ai-hackathon/)
-- 在线交互 Demo：[https://backing-cell-rentals-certainly.trycloudflare.com/](https://backing-cell-rentals-certainly.trycloudflare.com/)
+- 在线交互 Demo：部署到 Vercel 后填写生产 URL，不再依赖本机 `trycloudflare` 临时隧道。
 
 ## 评审说明
 
@@ -100,6 +100,10 @@ Agent 会主动基于新增偏好重新选择更合适的南京菜候选。
 ## 项目结构
 
 ```text
+api/
+  index.py                  Vercel Python Serverless 入口，导出 FastAPI app
+vercel.json                 Vercel 路由与 Python runtime 配置
+requirements.txt            Vercel Python 依赖安装清单
 app/
   server.py                 FastAPI 路由与 SSE 事件流
   session.py                核心 Agent 状态机、intake context、Planning、执行逻辑
@@ -126,9 +130,9 @@ cp .env.example .env
 编辑 `.env`：
 
 ```bash
-PLANNER_KEY=your-key
-PLANNER_BASE_URL=http://127.0.0.1:18150
-PLANNER_MODEL=claude-opus-4.8
+KIMI_API_KEY=your-kimi-key
+PLANNER_BASE_URL=https://api.moonshot.cn
+PLANNER_MODEL=kimi-k2.6
 ```
 
 `AMAP_KEY` 可以留空。本项目地图、定位、地点检索和交易执行均走 mock API。
@@ -145,6 +149,25 @@ uv run uvicorn app.server:app --host 127.0.0.1 --port 8010
 http://127.0.0.1:8010/
 ```
 
+## Vercel 评审部署
+
+本仓库已内置 Vercel Python Serverless 入口：
+
+- `api/index.py` 导出 `app.server:app`
+- `vercel.json` 把全部请求转发到 FastAPI
+- `requirements.txt` 供 Vercel 安装运行依赖
+
+部署时在 Vercel Project Settings → Environment Variables 设置：
+
+```bash
+KIMI_API_KEY=your-kimi-key
+PLANNER_BASE_URL=https://api.moonshot.cn
+PLANNER_MODEL=kimi-k2.6
+AMAP_KEY=
+```
+
+也可以继续使用兼容变量名 `PLANNER_KEY` 或 `MOONSHOT_API_KEY`。评审 demo 保留当前单会话内存态，适合单人评审链路；不再需要本机网络和 `trycloudflare` 隧道常驻。
+
 ### 3. 运行测试
 
 ```bash
@@ -154,7 +177,7 @@ uv run pytest -q
 当前提交验证结果：
 
 ```text
-52 passed
+54 passed
 ```
 
 所有交易动作均为 mock，不会产生真实订单。

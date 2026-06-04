@@ -1,8 +1,8 @@
 """配置入口：读取 .env + 进程环境变量。
 
 只需要两项：
-- PLANNER_KEY / OPENAI_NEXT_API_KEY  —— LLM 网关 key（必填）
-- PLANNER_BASE_URL                    —— LLM 网关地址（缺省走内网 gpt-5.5）
+- PLANNER_KEY / KIMI_API_KEY / MOONSHOT_API_KEY  —— LLM 网关 key（必填）
+- PLANNER_BASE_URL                               —— LLM 网关地址（缺省走 Kimi）
 
 AMAP_KEY 不再必填：本项目全程使用美团/点评 Mock API，地图与定位也走 Mock。
 """
@@ -12,8 +12,8 @@ import os
 from dataclasses import dataclass
 from pathlib import Path
 
-DEFAULT_PLANNER_BASE_URL = "http://100.99.139.20:18141"
-DEFAULT_MODEL = "gpt-5.5"
+DEFAULT_PLANNER_BASE_URL = "https://api.moonshot.cn"
+DEFAULT_MODEL = "kimi-k2.6"
 # 南京·建邺区·金陵天地（河西商圈），demo 默认用户落点
 DEFAULT_LOCATION = "118.7372,32.0148"
 
@@ -56,7 +56,12 @@ def load_config(*, env_path: Path | None = None) -> Config:
     def pick(name: str, default: str | None = None) -> str | None:
         return os.environ.get(name) or file_vals.get(name) or default
 
-    api_key = pick("PLANNER_KEY") or pick("OPENAI_NEXT_API_KEY")
+    api_key = (
+        pick("PLANNER_KEY")
+        or pick("KIMI_API_KEY")
+        or pick("MOONSHOT_API_KEY")
+        or pick("OPENAI_NEXT_API_KEY")
+    )
     amap_key = pick("AMAP_KEY", "") or ""
     base_url = pick("PLANNER_BASE_URL", DEFAULT_PLANNER_BASE_URL)
     model = pick("PLANNER_MODEL", DEFAULT_MODEL) or DEFAULT_MODEL
@@ -64,7 +69,8 @@ def load_config(*, env_path: Path | None = None) -> Config:
 
     if not api_key:
         raise RuntimeError(
-            "missing LLM key: set PLANNER_KEY (or OPENAI_NEXT_API_KEY) "
+            "missing LLM key: set PLANNER_KEY, KIMI_API_KEY, "
+            "MOONSHOT_API_KEY, or OPENAI_NEXT_API_KEY "
             "in .env or process env.")
     assert base_url
     return Config(api_key=api_key, base_url=base_url, amap_key=amap_key, model=model,
