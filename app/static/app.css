@@ -27,7 +27,8 @@ body{background:radial-gradient(1200px 700px at 18% 0%,#1b2233 0%,#0E1117 60%);
 .topbar{flex-shrink:0;padding:46px 18px 12px;display:flex;align-items:center;justify-content:space-between;
   background:linear-gradient(180deg,#fff 0%,#fff 70%,rgba(255,255,255,0) 100%);z-index:20}
 .brand{display:flex;flex-direction:column;line-height:1.15}
-.brand .logo{font-size:21px;font-weight:800;color:var(--ink);letter-spacing:1px}
+.brand .product-name{font-size:11px;font-weight:800;color:var(--green-d);letter-spacing:0}
+.brand .logo{font-size:20px;font-weight:800;color:var(--ink);letter-spacing:1px}
 .loc{font-size:11px;color:var(--muted);background:#fff;border:1px solid var(--line);
   padding:6px 10px;border-radius:999px;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 

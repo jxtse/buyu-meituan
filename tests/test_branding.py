@@ -28,3 +28,11 @@ def test_xiaotuan_persona_copy_is_preserved():
     text = "\n".join(path.read_text(encoding="utf-8") for path in persona_files)
 
     assert "小团" in text
+
+
+def test_homepage_shows_public_brand_and_persona():
+    html = (ROOT / "app" / "templates" / "index.html").read_text(encoding="utf-8")
+
+    assert "<title>本地引力 · 小团" in html
+    assert '<span class="product-name">本地引力</span>' in html
+    assert '<span class="logo">小团</span>' in html
