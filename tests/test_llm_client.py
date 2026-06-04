@@ -22,7 +22,7 @@ class _FakeHTTP:
 
 def test_kimi_chat_completions_omits_temperature():
     client = LLMClient(
-        base_url="https://api.moonshot.cn",
+        base_url="https://api.moonshot.ai",
         api_key="sk-test",
         model="kimi-k2.6",
     )
@@ -31,6 +31,6 @@ def test_kimi_chat_completions_omits_temperature():
 
     client.chat(messages=[{"role": "user", "content": "hi"}], tools=[])
 
-    assert fake_http.url == "https://api.moonshot.cn/v1/chat/completions"
+    assert fake_http.url == "https://api.moonshot.ai/v1/chat/completions"
     assert fake_http.body["model"] == "kimi-k2.6"
     assert "temperature" not in fake_http.body

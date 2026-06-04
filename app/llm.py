@@ -17,7 +17,7 @@ from typing import Any
 
 import httpx
 
-DEFAULT_BASE_URL = "https://api.moonshot.cn"
+DEFAULT_BASE_URL = "https://api.moonshot.ai"
 DEFAULT_MODEL = "kimi-k2.6"
 
 _RESPONSES_API_PREFIXES = ("gpt-5.5", "gpt-5.4-mini", "gpt-5.6")

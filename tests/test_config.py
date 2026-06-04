@@ -8,5 +8,5 @@ def test_kimi_env_key_uses_moonshot_defaults(tmp_path):
     cfg = load_config(env_path=env_file)
 
     assert cfg.api_key == "sk-test"
-    assert cfg.base_url == "https://api.moonshot.cn"
+    assert cfg.base_url == "https://api.moonshot.ai"
     assert cfg.model == "kimi-k2.6"

@@ -131,7 +131,7 @@ cp .env.example .env
 
 ```bash
 KIMI_API_KEY=your-kimi-key
-PLANNER_BASE_URL=https://api.moonshot.cn
+PLANNER_BASE_URL=https://api.moonshot.ai
 PLANNER_MODEL=kimi-k2.6
 ```
 
@@ -161,7 +161,7 @@ http://127.0.0.1:8010/
 
 ```bash
 KIMI_API_KEY=your-kimi-key
-PLANNER_BASE_URL=https://api.moonshot.cn
+PLANNER_BASE_URL=https://api.moonshot.ai
 PLANNER_MODEL=kimi-k2.6
 AMAP_KEY=
 ```

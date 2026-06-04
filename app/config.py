@@ -12,7 +12,7 @@ import os
 from dataclasses import dataclass
 from pathlib import Path
 
-DEFAULT_PLANNER_BASE_URL = "https://api.moonshot.cn"
+DEFAULT_PLANNER_BASE_URL = "https://api.moonshot.ai"
 DEFAULT_MODEL = "kimi-k2.6"
 # 南京·建邺区·金陵天地（河西商圈），demo 默认用户落点
 DEFAULT_LOCATION = "118.7372,32.0148"
