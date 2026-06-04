@@ -13,7 +13,7 @@
   POST /api/execute           一键执行（含无座/无票/冲突自动调整）
   GET  /api/plan              当前已选计划
 
-单会话内存态（demo 单用户场景足够）。SSE 用 EventBus 广播。
+浏览器随请求携带可恢复会话 state；同实例内存缓存只做快速回退。SSE 用 EventBus 广播。
 """
 from __future__ import annotations
 
@@ -60,6 +60,7 @@ _llm = LLMClient(
 _mock = MeituanMock(bus=_bus)
 _images = PlaceImageResolver(amap_key=_cfg.amap_key)
 _session: Session | None = None
+_sessions: dict[str, Session] = {}
 _session_lock = asyncio.Lock()
 
 
@@ -72,6 +73,7 @@ def _new_session() -> Session:
     global _session
     meituan_mod.disable_faults()
     _session = Session(llm=_llm, mock=_mock, bus=_bus)
+    _sessions[_session.id] = _session
     return _session
 
 
@@ -79,6 +81,22 @@ def _require() -> Session:
     if _session is None:
         raise RuntimeError("no active session; POST /api/start first")
     return _session
+
+
+def _resolve_session(payload: dict | None = None) -> Session:
+    global _session
+    data = payload or {}
+    state = data.get("state")
+    if isinstance(state, dict):
+        _session = Session.from_state(state, llm=_llm, mock=_mock, bus=_bus)
+        _sessions[_session.id] = _session
+        return _session
+
+    session_id = data.get("session_id")
+    if session_id and session_id in _sessions:
+        _session = _sessions[session_id]
+        return _session
+    return _require()
 
 
 async def _run_blocking(fn, *args, **kwargs) -> Any:
@@ -136,18 +154,20 @@ async def start(payload: dict) -> JSONResponse:
 
 
 @app.post("/api/accept")
-async def accept() -> JSONResponse:
+async def accept(payload: dict | None = None) -> JSONResponse:
     async with _session_lock:
-        sess = _require()
+        sess = _resolve_session(payload)
         result = await _run_blocking(sess.accept)
+        _sessions[sess.id] = sess
     return JSONResponse(result)
 
 
 @app.post("/api/reject")
-async def reject() -> JSONResponse:
+async def reject(payload: dict | None = None) -> JSONResponse:
     async with _session_lock:
-        sess = _require()
+        sess = _resolve_session(payload)
         result = await _run_blocking(sess.reject)
+        _sessions[sess.id] = sess
     return JSONResponse(result)
 
 
@@ -157,8 +177,9 @@ async def switch(payload: dict) -> JSONResponse:
     if not poi_id:
         return JSONResponse({"error": "missing poi_id"}, status_code=400)
     async with _session_lock:
-        sess = _require()
+        sess = _resolve_session(payload)
         result = await _run_blocking(sess.switch_to, poi_id)
+        _sessions[sess.id] = sess
     return JSONResponse(result)
 
 
@@ -168,8 +189,9 @@ async def chat(payload: dict) -> JSONResponse:
     if not message:
         return JSONResponse({"error": "empty message"}, status_code=400)
     async with _session_lock:
-        sess = _require()
+        sess = _resolve_session(payload)
         result = await _run_blocking(sess.chat, message)
+        _sessions[sess.id] = sess
     return JSONResponse(result)
 
 
@@ -181,10 +203,11 @@ async def detail(poi_id: str) -> JSONResponse:
 
 
 @app.post("/api/execute")
-async def execute() -> JSONResponse:
+async def execute(payload: dict | None = None) -> JSONResponse:
     async with _session_lock:
-        sess = _require()
+        sess = _resolve_session(payload)
         result = await _run_blocking(sess.execute)
+        _sessions[sess.id] = sess
     return JSONResponse(result)
 
 

@@ -17,8 +17,12 @@ const input = $('#input'), sendBtn = $('#send'), voiceBtn = $('#voice');
 const techLog = $('#tech-log'), techStage = $('#tech-stage');
 const drawer = $('#drawer'), drawerMask = $('#drawer-mask');
 
-let state = { active: false, intake: false, done: false, segments: [], curIndex: 0, busy: false, suppressLiveUntil: 0 };
+let state = { active: false, intake: false, done: false, segments: [], curIndex: 0, busy: false, suppressLiveUntil: 0, serverState: null };
 let voiceState = { recognition: null, listening: false, holdMode: false, longPress: false, pressTimer: null };
+
+function syncServerState(payload) {
+  if (payload && payload.state) state.serverState = payload.state;
+}
 
 // ---------------- SSE ----------------
 const STAGE_LABEL = {
@@ -101,6 +105,7 @@ async function start(query, opts = {}) {
   if (state.busy) return;
   const source = opts.source || 'custom';
   state.busy = true; setComposer(false);
+  state.serverState = null;
   welcome.style.display = 'none';
   addUserBubble(query);
   const thinking = addThinking(source === 'preset' ? '正在思考中…' : '正在理解你的需求…');
@@ -110,6 +115,7 @@ async function start(query, opts = {}) {
       body: JSON.stringify({ query, source, preset_id: opts.presetId }),
     });
     const d = await r.json();
+    syncServerState(d);
     if (d.error) { thinking.remove(); addThinking('出错了：' + d.error); return; }
     if (source === 'preset' && d.agent_events) {
       await replayAgentEvents(d.agent_events, d.agent_delay_ms || 220, { clear: true, stage: '启动中' });
@@ -142,9 +148,10 @@ async function act(path, body) {
   try {
     const r = await fetch(path, {
       method: 'POST', headers: { 'content-type': 'application/json' },
-      body: JSON.stringify(body || {}),
+      body: JSON.stringify({ ...(body || {}), state: state.serverState }),
     });
     const d = await r.json();
+    syncServerState(d);
     if (d.agent_events) {
       await replayAgentEvents(d.agent_events, d.agent_delay_ms || 120, { clear: false, stage: '同步中' });
     }
@@ -167,9 +174,10 @@ async function sendChat(msg) {
   try {
     const r = await fetch('/api/chat', {
       method: 'POST', headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ message: msg }),
+      body: JSON.stringify({ message: msg, state: state.serverState }),
     });
     const d = await r.json();
+    syncServerState(d);
     if (d.agent_events) {
       await replayAgentEvents(d.agent_events, d.agent_delay_ms || 120, { clear: false, stage: '对话' });
     }
@@ -325,8 +333,12 @@ async function execute(btn) {
   const box = $('#exec-res');
   try {
     state.suppressLiveUntil = Date.now() + 8000;
-    const r = await fetch('/api/execute', { method: 'POST' });
+    const r = await fetch('/api/execute', {
+      method: 'POST', headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ state: state.serverState }),
+    });
     const d = await r.json();
+    syncServerState(d);
     if (d.agent_events) {
       await replayAgentEvents(d.agent_events, d.agent_delay_ms || 120, { clear: false, stage: '执行下单' });
     }

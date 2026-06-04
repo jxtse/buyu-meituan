@@ -1,6 +1,7 @@
 import os
+import json
+import subprocess
 
-import httpx
 import pytest
 
 
@@ -13,29 +14,61 @@ pytestmark = pytest.mark.skipif(
 )
 
 
-def _client() -> httpx.Client:
-    return httpx.Client(base_url=BASE_URL, timeout=35.0, follow_redirects=True)
+def _request(method: str, path: str, payload: dict | None = None):
+    command = [
+        "curl",
+        "-sS",
+        "--max-time",
+        "35",
+        "--retry",
+        "3",
+        "--retry-all-errors",
+        "--retry-delay",
+        "1",
+        "-w",
+        "\n%{http_code}",
+        "-X",
+        method,
+    ]
+    if payload is not None:
+        command.extend([
+            "-H",
+            "content-type: application/json",
+            "--data",
+            json.dumps(payload, ensure_ascii=False),
+        ])
+    command.append(f"{BASE_URL}{path}")
+    completed = subprocess.run(
+        command,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    body, _, status_text = completed.stdout.rpartition("\n")
+    return int(status_text), body
+
+
+def _json_request(method: str, path: str, payload: dict | None = None) -> tuple[int, dict]:
+    status, body = _request(method, path, payload)
+    return status, json.loads(body)
 
 
 def test_deployed_health_uses_kimi_model():
-    with _client() as client:
-        response = client.get("/api/health")
+    status, data = _json_request("GET", "/api/health")
 
-    assert response.status_code == 200
-    data = response.json()
+    assert status == 200
     assert data["ok"] is True
     assert data["model"] == "kimi-k2.6"
     assert data["merchants"] >= 33
 
 
 def test_deployed_homepage_exposes_brand_and_persona():
-    with _client() as client:
-        response = client.get("/")
+    status, body = _request("GET", "/")
 
-    assert response.status_code == 200
-    assert "本地引力" in response.text
-    assert "小团" in response.text
-    assert "trycloudflare" not in response.text
+    assert status == 200
+    assert "本地引力" in body
+    assert "小团" in body
+    assert "trycloudflare" not in body
 
 
 def test_deployed_custom_query_returns_first_card_without_timeout():
@@ -43,12 +76,11 @@ def test_deployed_custom_query_returns_first_card_without_timeout():
         "query": "一个人，现在去，新街口附近，想吃清淡一点，也想安静坐一会儿",
         "source": "custom",
     }
-    with _client() as client:
-        response = client.post("/api/start", json=payload)
+    status, data = _json_request("POST", "/api/start", payload)
 
-    assert response.status_code == 200
-    data = response.json()
+    assert status == 200
     assert data["constraints"]["scene"] == "solo"
+    assert data["state"]["id"]
     assert data["card"]["poi"]["id"] == "deji_green_tea"
     assert "新街口" in data["card"]["poi"]["match_reasons"]
     assert "清淡" in data["card"]["poi"]["match_reasons"]
@@ -56,35 +88,37 @@ def test_deployed_custom_query_returns_first_card_without_timeout():
 
 
 def test_deployed_preset_accept_execute_flow_returns_mock_confirmation():
-    with _client() as client:
-        start = client.post(
-            "/api/start",
-            json={
-                "query": "周末下午带老婆孩子出来玩，孩子5岁，想找个能遛娃的地方，再吃顿好的，别离家太远",
-                "source": "preset",
-                "preset_id": "family",
-            },
-        )
-        assert start.status_code == 200
-        first = start.json()
-        assert first["card"]["poi"]["id"] == "kiddo_lab"
+    status, first = _json_request(
+        "POST",
+        "/api/start",
+        {
+            "query": "周末下午带老婆孩子出来玩，孩子5岁，想找个能遛娃的地方，再吃顿好的，别离家太远",
+            "source": "preset",
+            "preset_id": "family",
+        },
+    )
+    assert status == 200
+    assert first["card"]["poi"]["id"] == "kiddo_lab"
+    state = first["state"]
 
-        second = client.post("/api/accept")
-        assert second.status_code == 200
-        assert second.json()["card"]
+    status, second = _json_request("POST", "/api/accept", {"state": state})
+    assert status == 200
+    assert second["card"]
+    state = second["state"]
 
-        third = client.post("/api/accept")
-        assert third.status_code == 200
-        assert third.json()["card"]
+    status, third = _json_request("POST", "/api/accept", {"state": state})
+    assert status == 200
+    assert third["card"]
+    state = third["state"]
 
-        final_accept = client.post("/api/accept")
-        assert final_accept.status_code == 200
-        ready = final_accept.json()
-        assert ready["done"] is True
-        assert len(ready["plan"]["stops"]) == 3
+    status, ready = _json_request("POST", "/api/accept", {"state": state})
+    assert status == 200
+    assert ready["done"] is True
+    assert len(ready["plan"]["stops"]) == 3
+    state = ready["state"]
 
-        execute = client.post("/api/execute")
-        assert execute.status_code == 200
-        result = execute.json()
-        assert result["done"] is True
-        assert len(result["executions"]) == 3
+    status, result = _json_request("POST", "/api/execute", {"state": state})
+    assert status == 200
+    assert result["ok"] is True
+    assert len(result["results"]) == 3
+    assert all(item["status"] == "ok" for item in result["results"])

@@ -104,6 +104,34 @@ def test_preset_start_does_not_call_llm_and_returns_first_card():
     assert any(e.get("type") == "tool_call" and e.get("name") == "dianping_search" for e in bus.events)
 
 
+def test_exported_state_can_resume_preset_flow_without_global_session():
+    session, _llm, _bus = _session()
+    first = session.start(
+        "周末下午带老婆孩子出来玩，孩子5岁，想找个能遛娃的地方，再吃顿好的，别离家太远",
+        source="preset",
+        preset_id="family",
+    )
+
+    resumed = Session.from_state(
+        first["state"],
+        llm=session.llm,
+        mock=session.mock,
+        bus=session.bus,
+    )
+    second = resumed.accept()
+    resumed = Session.from_state(second["state"], llm=session.llm, mock=session.mock, bus=session.bus)
+    third = resumed.accept()
+    resumed = Session.from_state(third["state"], llm=session.llm, mock=session.mock, bus=session.bus)
+    ready = resumed.accept()
+    resumed = Session.from_state(ready["state"], llm=session.llm, mock=session.mock, bus=session.bus)
+    executed = resumed.execute()
+
+    assert ready["done"] is True
+    assert len(ready["plan"]["stops"]) == 3
+    assert executed["ok"] is True
+    assert len(executed["results"]) == 3
+
+
 def test_custom_start_still_calls_llm_for_intent():
     session, llm, _bus = _session()
 

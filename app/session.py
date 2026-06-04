@@ -466,6 +466,92 @@ class Session:
             "goal": None,
         }
 
+    # ---------------- 可恢复状态 ----------------
+    @staticmethod
+    def _rec_to_state(rec: Recommendation | None) -> dict[str, Any] | None:
+        if rec is None:
+            return None
+        return {
+            "poi_id": rec.poi.get("id"),
+            "segment_kind": rec.segment_kind,
+            "segment_intent": rec.segment_intent,
+            "summary": rec.summary,
+            "groupon_id": rec.groupon_id,
+            "groupon_reason": rec.groupon_reason,
+            "suggestion": rec.suggestion,
+            "confidence": rec.confidence,
+        }
+
+    def _rec_from_state(self, data: dict[str, Any] | None) -> Recommendation | None:
+        if not data or not data.get("poi_id"):
+            return None
+        poi = self.mock._brief(self.mock.get(data["poi_id"]), self.mock.home_location())
+        return Recommendation(
+            segment_kind=data.get("segment_kind") or poi.get("segment") or "",
+            segment_intent=data.get("segment_intent") or "",
+            poi=poi,
+            summary=data.get("summary") or poi.get("ai_pitch", poi["name"]),
+            groupon_id=data.get("groupon_id"),
+            groupon_reason=data.get("groupon_reason") or "",
+            suggestion=data.get("suggestion") or "",
+            confidence=float(data.get("confidence") or 0.88),
+        )
+
+    def export_state(self) -> dict[str, Any]:
+        return {
+            "id": self.id,
+            "query": self.query,
+            "constraints": self.constraints,
+            "segments": [{
+                "kind": seg.kind,
+                "intent": seg.intent,
+                "rejected": sorted(seg.rejected),
+                "current": self._rec_to_state(seg.current),
+                "accepted": self._rec_to_state(seg.accepted),
+            } for seg in self.segments],
+            "idx": self.idx,
+            "narrative": self.narrative,
+            "location": self.location,
+            "intake_active": self.intake_active,
+            "intake_messages": self.intake_messages,
+            "intake_context": self.intake_context,
+        }
+
+    @classmethod
+    def from_state(
+        cls,
+        state: dict[str, Any],
+        *,
+        llm: LLMClient,
+        mock: MeituanMock,
+        bus: Any = None,
+    ) -> "Session":
+        sess = cls(llm=llm, mock=mock, bus=bus)
+        sess.id = state.get("id") or sess.id
+        sess.query = state.get("query") or ""
+        sess.constraints = state.get("constraints") or {}
+        sess.idx = int(state.get("idx") or 0)
+        sess.narrative = state.get("narrative") or ""
+        sess.location = state.get("location") or {}
+        sess.intake_active = bool(state.get("intake_active"))
+        sess.intake_messages = list(state.get("intake_messages") or [])
+        sess.intake_context = state.get("intake_context") or sess.intake_context
+        sess.segments = []
+        for raw in state.get("segments") or []:
+            seg = Segment(
+                kind=raw.get("kind") or "",
+                intent=raw.get("intent") or "",
+                rejected=set(raw.get("rejected") or []),
+            )
+            seg.current = sess._rec_from_state(raw.get("current"))
+            seg.accepted = sess._rec_from_state(raw.get("accepted"))
+            sess.segments.append(seg)
+        return sess
+
+    def _with_state(self, result: dict[str, Any]) -> dict[str, Any]:
+        result["state"] = self.export_state()
+        return result
+
     # ---------------- 事件 ----------------
     def _emit(self, ev: dict) -> None:
         ev.setdefault("ts", round(time.time() - self.started_at, 2))
@@ -495,7 +581,7 @@ class Session:
         self._think(f"用户在{self.location['business_area']}，先理解 TA 的需求。")
 
         if source != "preset" and _is_intake_greeting(query):
-            return self._run_intake_agent(query, first_turn=True)
+            return self._with_state(self._run_intake_agent(query, first_turn=True))
 
         # 1) 意图解析
         if source == "preset":
@@ -540,7 +626,7 @@ class Session:
             result["agent_delay_ms"] = 240
             result["agent_events"] = self._with_tool_latency(
                 self._preset_agent_events(preset_id, card))
-        return result
+        return self._with_state(result)
 
     # ---------------- LLM 步骤 ----------------
     def _run_intake_agent(self, message: str, *, first_turn: bool = False) -> dict[str, Any]:
@@ -567,7 +653,7 @@ class Session:
                 "text": reply,
             })
             self._emit({"type": "assistant_reply", "text": reply})
-            return {
+            return self._with_state({
                 "session_id": self.id,
                 "location": self.location,
                 "constraints": {},
@@ -582,9 +668,9 @@ class Session:
                 "intake_options": options,
                 **self._sync_agent_payload(self._intake_replay_events(
                     message, reply, missing, first_turn=first_turn)),
-            }
+            })
 
-        return self._complete_intake_planning()
+        return self._with_state(self._complete_intake_planning())
 
     def _update_intake_context(self, message: str) -> dict[str, Any]:
         facts = _extract_intake_facts(message)
@@ -712,7 +798,7 @@ class Session:
         reply = "我先按你刚补充的信息做一版，下面这张卡是第一站；你可以继续说偏好，我会边聊边调整。"
         self._emit({"type": "assistant_reply", "text": reply})
         self.intake_active = False
-        return {
+        return self._with_state({
             "session_id": self.id,
             "location": self.location,
             "constraints": self.constraints,
@@ -724,7 +810,7 @@ class Session:
             "reply": reply,
             "intake_active": False,
             **self._sync_agent_payload(self._intake_complete_replay_events(card)),
-        }
+        })
 
     def _intake_replay_events(
         self,
@@ -1278,12 +1364,12 @@ class Session:
             result = self._finish()
             result.update(self._sync_agent_payload(
                 self._plan_ready_events("用户点击「就这家，下一步」", accepted_name, result.get("plan"))))
-            return result
+            return self._with_state(result)
         card = self._recommend_current()
-        return {"done": False, "current_index": self.idx, "card": card,
+        return self._with_state({"done": False, "current_index": self.idx, "card": card,
                 "plan": self.current_plan(),
                 **self._sync_agent_payload(self._card_action_events(
-                    "用户点击「就这家，下一步」", accepted_name, "进入下一段推荐", card))}
+                    "用户点击「就这家，下一步」", accepted_name, "进入下一段推荐", card))})
 
     def reject(self) -> dict[str, Any]:
         seg = self.segments[self.idx]
@@ -1299,12 +1385,12 @@ class Session:
                 result = self._finish()
                 result.update(self._sync_agent_payload(
                     self._plan_ready_events("用户点击「换一个」", rejected_name, result.get("plan"))))
-                return result
+                return self._with_state(result)
             card = self._recommend_current()
-        return {"done": False, "current_index": self.idx, "card": card,
+        return self._with_state({"done": False, "current_index": self.idx, "card": card,
                 "plan": self.current_plan(),
                 **self._sync_agent_payload(self._card_action_events(
-                    "用户点击「换一个」", rejected_name, "同段替换候选", card))}
+                    "用户点击「换一个」", rejected_name, "同段替换候选", card))})
 
     def switch_to(self, poi_id: str) -> dict[str, Any]:
         """用户在详情二级菜单里手动改选同段的另一家。"""
@@ -1327,10 +1413,10 @@ class Session:
         self._think(f"用户手动改选「{poi['name']}」。")
         card = seg.current.to_card()
         self._emit({"type": "card", "card": card, "segment_index": self.idx})
-        return {"done": False, "current_index": self.idx, "card": card,
+        return self._with_state({"done": False, "current_index": self.idx, "card": card,
                 "plan": self.current_plan(),
                 **self._sync_agent_payload(self._card_action_events(
-                    "用户在详情页点击「改选」", poi["name"], "手动替换当前卡片", card))}
+                    "用户在详情页点击「改选」", poi["name"], "手动替换当前卡片", card))})
 
     def chat(self, message: str) -> dict[str, Any]:
         if self.intake_active or not self.segments:
@@ -1384,8 +1470,8 @@ class Session:
         elif action == "refine":
             card = self._recommend_current()
         self._emit({"type": "assistant_reply", "text": reply})
-        return {"reply": reply, "action": action, "card": card,
-                "current_index": self.idx, "done": False}
+        return self._with_state({"reply": reply, "action": action, "card": card,
+                                 "current_index": self.idx, "done": False})
 
     @staticmethod
     def _explicit_preference_switch(
@@ -1525,8 +1611,11 @@ class Session:
                 "time": time_str, "tool_name": tool_name})
         ok = all(r["status"] == "ok" for r in results)
         self._emit({"type": "execute_done", "ok": ok, "results": results})
-        return {"ok": ok, "results": results, "plan": plan,
-                **self._sync_agent_payload(self._execute_agent_events(results, ok), delay_ms=180)}
+        return self._with_state({"ok": ok, "results": results, "plan": plan,
+                                 **self._sync_agent_payload(
+                                     self._execute_agent_events(results, ok),
+                                     delay_ms=180,
+                                 )})
 
     def _heal(self, seg: Segment, failed_id: str, party: int, time_str: str,
               reason: str) -> dict | None:
