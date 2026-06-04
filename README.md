@@ -1,10 +1,10 @@
-# 步语 BuYu · 美团 AI Hackathon 2026 赛题06
+# 本地引力 · 美团 AI Hackathon 2026 赛题06
 
 这是提交给 **美团 AI Hackathon 2026 赛题06「本地探索 · 周末闲时活动规划」** 的完整实现代码。
 
-步语 BuYu 面向「周末半天不知道去哪儿」这一高频本地生活场景，把一句含糊需求转化为一条 **可确认、可解释、可执行** 的本地生活方案。系统不是只生成推荐文案，而是把 LLM 放在规划中枢：在真实商户候选、实时可用性与用户反馈之间持续权衡，并把推荐、确认与执行连成闭环。
+本地引力面向「周末半天不知道去哪儿」这一高频本地生活场景，把一句含糊需求转化为一条 **可确认、可解释、可执行** 的本地生活方案。系统不是只生成推荐文案，而是把 LLM 放在规划中枢：在真实商户候选、实时可用性与用户反馈之间持续权衡，并把推荐、确认与执行连成闭环。
 
-- 项目设计文档：[步语 BuYu · 美团 AI Hackathon 设计文档](https://jxtse.github.io/projects/meituan-ai-hackathon/)
+- 项目设计文档：[本地引力 · 美团 AI Hackathon 设计文档](https://jxtse.github.io/projects/meituan-ai-hackathon/)
 - 在线交互 Demo：部署到 Vercel 后填写生产 URL，不再依赖本机 `trycloudflare` 临时隧道。
 
 ## 评审说明
@@ -84,7 +84,7 @@ Agent 会主动基于新增偏好重新选择更合适的南京菜候选。
 
 ### 5. Session 上下文与技能内化设计
 
-步语 BuYu 不再实现手动记忆读写类工具：
+本地引力不再实现手动记忆读写类工具：
 
 - **session 内上下文**：本轮对话里的目标、区域、时间、同行人和偏好直接来自当前 session 的消息与用户操作。LLM 在同一会话内天然能看到上下文，服务端只保留必要槽位用于 UI 状态和工具参数。
 - **参数化技能内化方向**：跨 session 的长期偏好和通用规划能力交给 LoRA + RL 内化，例如分段规划范式、动线和体力常识、实时可用性检查、自动调整策略。
@@ -133,6 +133,7 @@ cp .env.example .env
 KIMI_API_KEY=your-kimi-key
 PLANNER_BASE_URL=https://api.moonshot.ai
 PLANNER_MODEL=kimi-k2.6
+PLANNER_TIMEOUT_SECONDS=20
 ```
 
 `AMAP_KEY` 可以留空。本项目地图、定位、地点检索和交易执行均走 mock API。
@@ -163,10 +164,11 @@ http://127.0.0.1:8010/
 KIMI_API_KEY=your-kimi-key
 PLANNER_BASE_URL=https://api.moonshot.ai
 PLANNER_MODEL=kimi-k2.6
+PLANNER_TIMEOUT_SECONDS=20
 AMAP_KEY=
 ```
 
-也可以继续使用兼容变量名 `PLANNER_KEY` 或 `MOONSHOT_API_KEY`。评审 demo 保留当前单会话内存态，适合单人评审链路；不再需要本机网络和 `trycloudflare` 隧道常驻。
+也可以继续使用兼容变量名 `PLANNER_KEY` 或 `MOONSHOT_API_KEY`。`PLANNER_TIMEOUT_SECONDS=20` 用于给 Vercel 评审环境留出降级返回时间：Kimi 调用过慢时会走启发式兜底，避免自定义 query 卡到函数超时。评审 demo 保留当前单会话内存态，适合单人评审链路；不再需要本机网络和 `trycloudflare` 隧道常驻。
 
 ### 3. 运行测试
 

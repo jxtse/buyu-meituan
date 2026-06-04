@@ -1,7 +1,7 @@
 [project]
 name = "buyu-meituan"
 version = "1.0.0"
-description = "步语 BuYu · 美团 AI Hackathon 2026 赛题06完整实现代码：本地生活规划与执行 Agent"
+description = "本地引力 · 美团 AI Hackathon 2026 赛题06完整实现代码：本地生活规划与执行 Agent"
 requires-python = ">=3.10"
 dependencies = [
     "fastapi>=0.110",

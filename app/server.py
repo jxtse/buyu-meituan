@@ -1,4 +1,4 @@
-"""步语 BuYu FastAPI 服务端。
+"""本地引力 FastAPI 服务端。
 
 路由：
   GET  /                      前端单页
@@ -36,7 +36,7 @@ from .place_images import PlaceImageResolver
 from .session import Session
 
 BASE = Path(__file__).parent
-app = FastAPI(title="步语 BuYu · 周末闲时活动规划 Agent")
+app = FastAPI(title="本地引力 · 周末闲时活动规划 Agent")
 
 # 允许个人站入口页（jxtse.github.io）跨域探活 /api/health。
 # Demo 无敏感数据、无鉴权，放开 CORS 不引入风险。
@@ -51,7 +51,12 @@ app.add_middleware(
 # ---------------- 全局单例 ----------------
 _cfg = load_config()
 _bus = EventBus()
-_llm = LLMClient(base_url=_cfg.base_url, api_key=_cfg.api_key, model=_cfg.model)
+_llm = LLMClient(
+    base_url=_cfg.base_url,
+    api_key=_cfg.api_key,
+    model=_cfg.model,
+    timeout=_cfg.llm_timeout_seconds,
+)
 _mock = MeituanMock(bus=_bus)
 _images = PlaceImageResolver(amap_key=_cfg.amap_key)
 _session: Session | None = None

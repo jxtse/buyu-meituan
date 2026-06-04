@@ -3,6 +3,7 @@
 只需要两项：
 - PLANNER_KEY / KIMI_API_KEY / MOONSHOT_API_KEY  —— LLM 网关 key（必填）
 - PLANNER_BASE_URL                               —— LLM 网关地址（缺省走 Kimi）
+- PLANNER_TIMEOUT_SECONDS                        —— 单次 LLM 调用超时（缺省 20 秒）
 
 AMAP_KEY 不再必填：本项目全程使用美团/点评 Mock API，地图与定位也走 Mock。
 """
@@ -14,6 +15,7 @@ from pathlib import Path
 
 DEFAULT_PLANNER_BASE_URL = "https://api.moonshot.ai"
 DEFAULT_MODEL = "kimi-k2.6"
+DEFAULT_LLM_TIMEOUT_SECONDS = 20.0
 # 南京·建邺区·金陵天地（河西商圈），demo 默认用户落点
 DEFAULT_LOCATION = "118.7372,32.0148"
 
@@ -25,6 +27,7 @@ class Config:
     amap_key: str = ""
     model: str = DEFAULT_MODEL
     default_location: str = DEFAULT_LOCATION
+    llm_timeout_seconds: float = DEFAULT_LLM_TIMEOUT_SECONDS
 
 
 def _parse_env_file(path: Path) -> dict[str, str]:
@@ -66,6 +69,11 @@ def load_config(*, env_path: Path | None = None) -> Config:
     base_url = pick("PLANNER_BASE_URL", DEFAULT_PLANNER_BASE_URL)
     model = pick("PLANNER_MODEL", DEFAULT_MODEL) or DEFAULT_MODEL
     default_loc = pick("DEFAULT_LOCATION", DEFAULT_LOCATION) or DEFAULT_LOCATION
+    timeout_raw = pick("PLANNER_TIMEOUT_SECONDS", str(DEFAULT_LLM_TIMEOUT_SECONDS))
+    try:
+        llm_timeout = max(1.0, float(timeout_raw or DEFAULT_LLM_TIMEOUT_SECONDS))
+    except ValueError:
+        llm_timeout = DEFAULT_LLM_TIMEOUT_SECONDS
 
     if not api_key:
         raise RuntimeError(
@@ -74,4 +82,4 @@ def load_config(*, env_path: Path | None = None) -> Config:
             "in .env or process env.")
     assert base_url
     return Config(api_key=api_key, base_url=base_url, amap_key=amap_key, model=model,
-                 default_location=default_loc)
+                 default_location=default_loc, llm_timeout_seconds=llm_timeout)
